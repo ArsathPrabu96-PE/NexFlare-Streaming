@@ -19,6 +19,12 @@
 
 <div align="center">
 
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Available-brightgreen?style=for-the-badge)](https://arsathprabu96-pe.github.io/NexFlare-Streaming/)
+[![GitHub Actions](https://img.shields.io/badge/🚀_Deploy-GitHub_Actions-blue?style=for-the-badge)](https://github.com/ArsathPrabu96-PE/NexFlare-Streaming/actions)
+[![GitHub Pages](https://img.shields.io/badge/📄_Docs-GitHub_Pages-orange?style=for-the-badge)](https://github.com/ArsathPrabu96-PE/NexFlare-Streaming/settings/pages)
+
+**🎯 Live URL:** https://arsathprabu96-pe.github.io/NexFlare-Streaming/
+
 ```
         ╭─────────────────────────────────────────────────╮
         │  ✦ ･ﾟ✧*:･ﾟ✧ ANIMATED STREAMING PLATFORM ✧ﾟ･: *✧ﾟ･ ✦  │
@@ -92,6 +98,34 @@ A Netflix-like video-on-demand streaming platform built with modern web technolo
 ### Release Notes
 
 #### v1.0.0 (October 9, 2025)
+
+---
+
+## 🚀 Deployment Status
+
+### Live Deployment
+- **Status:** ✅ **DEPLOYED & LIVE**
+- **Platform:** GitHub Pages
+- **URL:** [https://arsathprabu96-pe.github.io/NexFlare-Streaming/](https://arsathprabu96-pe.github.io/NexFlare-Streaming/)
+- **Last Deploy:** Latest commit auto-deployed via GitHub Actions
+
+### Deployment Pipeline
+| Service | Platform | Status | URL |
+|---------|----------|--------|-----|
+| **Frontend** | GitHub Pages | ✅ Live | [Visit Site](https://arsathprabu96-pe.github.io/NexFlare-Streaming/) |
+| **Backend** | Heroku/Railway | 🚧 Setup Required | [Deploy Guide](./DEPLOYMENT.md) |
+| **Admin** | GitHub Pages | 🚧 Coming Soon | - |
+
+### Quick Deployment Check
+```bash
+# Run the deployment checker
+./check-deployment.bat    # Windows
+./check-deployment.sh     # Linux/Mac
+```
+
+**GitHub Actions Workflow:** All pushes to `main` branch automatically trigger deployment to GitHub Pages.
+
+---
 - ✅ Complete backend API with authentication
 - ✅ Frontend web application with responsive design
 - ✅ User registration and login system
