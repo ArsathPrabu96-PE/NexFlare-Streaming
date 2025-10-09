@@ -7,7 +7,7 @@ const nextConfig = {
     unoptimized: true, // Required for static export
   },
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://nexflare-backend-production.railway.app/api',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
   },
   // GitHub Pages deployment
   basePath: process.env.NODE_ENV === 'production' ? '/NexFlare-Streaming' : '',

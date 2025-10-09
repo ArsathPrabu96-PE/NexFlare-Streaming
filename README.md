@@ -48,7 +48,7 @@ A Netflix-like video-on-demand streaming platform built with modern web technolo
 
 ## 🌐 Live Demo
 - **Frontend:** [https://arsathprabu96-pe.github.io/NexFlare-Streaming](https://arsathprabu96-pe.github.io/NexFlare-Streaming)
-- **Backend API:** Deploy to Heroku/Railway for full functionality
+- **Backend API:** Deploy to Heroku/Render for full functionality
 
 ---
 
@@ -113,7 +113,7 @@ A Netflix-like video-on-demand streaming platform built with modern web technolo
 | Service | Platform | Status | URL |
 |---------|----------|--------|-----|
 | **Frontend** | GitHub Pages | ✅ Live | [Visit Site](https://arsathprabu96-pe.github.io/NexFlare-Streaming/) |
-| **Backend** | Heroku/Railway | 🚧 Setup Required | [Deploy Guide](./DEPLOYMENT.md) |
+| **Backend** | Heroku/Render | 🚧 Setup Required | [Deploy Guide](./DEPLOYMENT.md) |
 | **Admin** | GitHub Pages | 🚧 Coming Soon | - |
 
 ### Quick Deployment Check
@@ -618,7 +618,7 @@ NEXT_PUBLIC_API_URL=https://api.nexflare.com
 
 #### Recommended Platforms
 - **Frontend:** Vercel, Netlify
-- **Backend:** AWS EC2, Railway, Render
+- **Backend:** AWS EC2, Render, Heroku
 - **Database:** MongoDB Atlas
 - **Storage:** AWS S3
 - **CDN:** AWS CloudFront
