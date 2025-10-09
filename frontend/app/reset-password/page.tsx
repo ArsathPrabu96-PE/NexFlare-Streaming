@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import AnimatedLogo from '../../components/AnimatedLogo'
 import StyledText from '../../components/StyledText'
 
-export default function ResetPassword() {
+function ResetPasswordForm() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -194,5 +194,17 @@ export default function ResetPassword() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ResetPassword() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   )
 }
