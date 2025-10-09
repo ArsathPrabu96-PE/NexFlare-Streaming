@@ -33,11 +33,16 @@
 
 </div>
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Mobile-lightgrey.svg)
+![Live Demo](https://img.shields.io/badge/demo-live-brightgreen.svg)
 
 A Netflix-like video-on-demand streaming platform built with modern web technologies, featuring user authentication, video streaming, and comprehensive content management.
+
+## 🌐 Live Demo
+- **Frontend:** [https://arsathprabu96-pe.github.io/NexFlare-Streaming](https://arsathprabu96-pe.github.io/NexFlare-Streaming)
+- **Backend API:** Deploy to Heroku/Railway for full functionality
 
 ---
 
