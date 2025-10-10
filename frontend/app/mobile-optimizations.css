@@ -16,6 +16,85 @@ body {
   -moz-osx-font-smoothing: grayscale !important;
 }
 
+/* AGGRESSIVE mobile graphics optimization */
+@media (max-width: 768px) {
+  /* Disable ALL complex animations for mobile performance */
+  * {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.2s !important;
+  }
+  
+  /* Disable specific heavy animations */
+  .text-rainbow,
+  .text-fire,
+  .text-ocean,
+  .text-neon-green,
+  .text-neon-pink,
+  .text-metallic-gold,
+  .text-metallic-silver {
+    animation: none !important;
+    background: linear-gradient(45deg, #00ff41, #ff0080) !important;
+    background-size: 100% 100% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    text-shadow: none !important;
+  }
+  
+  /* Simplify gradients for mobile */
+  .bg-gradient-to-r,
+  .bg-gradient-to-l,
+  .bg-gradient-to-t,
+  .bg-gradient-to-b,
+  .bg-gradient-to-br,
+  .bg-gradient-to-bl,
+  .bg-gradient-to-tr,
+  .bg-gradient-to-tl {
+    background: rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  /* Remove backdrop blur on mobile (performance killer) */
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  /* Disable text shadows and glows */
+  * {
+    text-shadow: none !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  /* Simplify Hero section for mobile */
+  .hero-background {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)) !important;
+  }
+  
+  /* Remove floating particles */
+  .floating-particles,
+  .particle-effect {
+    display: none !important;
+  }
+  
+  /* Simplify icons */
+  .graphics-icon {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  
+  /* Force static graphics icons for performance */
+  .graphics-icon-fire::before { content: "🔥"; }
+  .graphics-icon-sparkle::before { content: "✨"; }
+  .graphics-icon-star::before { content: "⭐"; }
+  .graphics-icon-diamond::before { content: "💎"; }
+}
+
 /* FORCE mobile navigation to be visible */
 @media screen and (max-width: 768px) {
   /* Force hamburger menu to show */
@@ -348,4 +427,151 @@ body {
   initial-scale: 1;
   maximum-scale: 5;
   user-scalable: yes;
+}
+
+/* Additional Mobile Graphics Performance Optimizations */
+@media (max-width: 768px) {
+  /* Disable decorative graphics icons */
+  .graphics-icon,
+  .graphics-icon-sparkle,
+  .graphics-icon-diamond,
+  .graphics-icon-star,
+  .graphics-icon-fire {
+    display: none !important;
+  }
+  
+  /* Override complex hover animations */
+  .group-hover\:scale-125,
+  .hover\:scale-110,
+  .hover\:scale-105,
+  .group-hover\:rotate-180,
+  .group-hover\:rotate-12 {
+    transform: none !important;
+    animation: none !important;
+  }
+  
+  /* Simplify gradient text effects */
+  .text-fire,
+  .text-neon-green,
+  .text-neon-pink,
+  .text-ocean,
+  .text-metallic-silver,
+  .text-metallic-gold {
+    background: none !important;
+    background-image: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+  
+  /* Mobile color fallbacks */
+  .text-fire {
+    color: #ef4444 !important;
+  }
+  
+  .text-neon-green {
+    color: #22c55e !important;
+  }
+  
+  .text-neon-pink {
+    color: #ec4899 !important;
+  }
+  
+  .text-ocean {
+    color: #3b82f6 !important;
+  }
+  
+  .text-metallic-silver {
+    color: #e5e7eb !important;
+  }
+  
+  .text-metallic-gold {
+    color: #fbbf24 !important;
+  }
+  
+  /* Disable backdrop filters entirely */
+  .backdrop-blur,
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  /* Simplify complex backgrounds */
+  .bg-gradient-to-r,
+  .bg-gradient-to-l,
+  .bg-gradient-to-t,
+  .bg-gradient-to-b,
+  .bg-gradient-to-br,
+  .bg-gradient-to-bl,
+  .bg-gradient-to-tr,
+  .bg-gradient-to-tl,
+  .bg-gradient-radial {
+    background: rgba(0, 0, 0, 0.8) !important;
+    background-image: none !important;
+  }
+  
+  /* Force disable GPU-intensive effects */
+  * {
+    will-change: auto !important;
+    transform3d: none !important;
+    backface-visibility: visible !important;
+    perspective: none !important;
+  }
+  
+  /* Optimize video cards for mobile */
+  .video-card {
+    transition: opacity 0.1s ease !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+  
+  .video-card:hover {
+    transform: none !important;
+    animation: none !important;
+  }
+  
+  /* Mobile button optimizations */
+  .mobile-btn-press:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s ease !important;
+  }
+  
+  /* Lightweight mobile animations only */
+  .mobile-fade-in {
+    opacity: 0;
+    animation: mobile-fade 0.3s ease-out forwards;
+  }
+  
+  @keyframes mobile-fade {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .mobile-slide-up {
+    transform: translateY(20px);
+    opacity: 0;
+    animation: mobile-slide 0.3s ease-out forwards;
+  }
+  
+  @keyframes mobile-slide {
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Force disable floating particles */
+  .floating-particles,
+  .particle,
+  .floating-particle,
+  .particles-container {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
 }
