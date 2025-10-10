@@ -1,5 +1,52 @@
 /* Mobile Performance Optimizations for NexFlare */
 
+/* CRITICAL: Force mobile viewport behavior */
+html {
+  -webkit-text-size-adjust: 100% !important;
+  -ms-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+body {
+  width: 100% !important;
+  overflow-x: hidden !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* FORCE mobile navigation to be visible */
+@media screen and (max-width: 768px) {
+  /* Force hamburger menu to show */
+  header button[class*="md:hidden"] {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* Force desktop menu to hide */
+  header nav[class*="hidden md:flex"] {
+    display: none !important;
+  }
+  
+  /* Force desktop sign-in to hide */
+  header a[class*="hidden md:flex"] {
+    display: none !important;
+  }
+  
+  /* Force desktop user menu to hide */
+  header div[class*="hidden md:block"] {
+    display: none !important;
+  }
+  
+  /* Ensure mobile menu is accessible */
+  .mobile-menu-container {
+    display: block !important;
+    width: 100% !important;
+  }
+}
+
 /* Reduce animations on mobile devices and low-power devices */
 @media (max-width: 768px), (prefers-reduced-motion: reduce) {
   /* Disable heavy animations on mobile */
@@ -179,12 +226,62 @@
 
 /* Mobile Navigation Specific Optimizations */
 @media (max-width: 768px) {
-  /* Ensure mobile menu is always accessible */
+  /* FORCE mobile menu button to be visible */
+  #mobile-menu-button {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: relative !important;
+    z-index: 9999 !important;
+  }
+  
+  /* FORCE desktop elements to hide */
+  #desktop-nav,
+  #desktop-signin,
+  #desktop-user-menu {
+    display: none !important;
+  }
+  
+  /* FORCE mobile menu to be positioned correctly */
+  #mobile-menu {
+    display: block !important;
+    width: 100% !important;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 999 !important;
+  }
+  
+  /* Ensure mobile menu is accessible */
+  .mobile-menu-container {
+    display: block !important;
+    width: 100% !important;
+    min-height: auto !important;
+  }
+
+  /* Mobile header spacing fixes */
   header {
-    touch-action: manipulation;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
+    touch-action: manipulation !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    width: 100% !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+
+  /* Mobile responsive logo */
+  .text-rainbow {
+    font-size: 1.25rem !important; /* text-xl */
+  }
+  
+  @media (min-width: 640px) {
+    .text-rainbow {
+      font-size: 1.5rem !important; /* text-2xl */
+    }
   }
 
   /* Mobile menu animations */
@@ -205,9 +302,9 @@
 
   /* Ensure buttons are touch-friendly */
   button, a, [role="button"] {
-    min-height: 44px;
-    min-width: 44px;
-    touch-action: manipulation;
+    min-height: 44px !important;
+    min-width: 44px !important;
+    touch-action: manipulation !important;
   }
 
   /* Prevent zoom on form inputs */
@@ -215,13 +312,19 @@
     font-size: 16px !important;
   }
 
-  /* Mobile-specific hover states */
+  /* Mobile-specific hover states - disable on touch devices */
   @media (hover: none) and (pointer: coarse) {
     button:hover,
     a:hover,
     .hover\:scale-105:hover {
       transform: none !important;
     }
+  }
+  
+  /* Force proper spacing on mobile */
+  header > div {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
 }
 

@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import './mobile-optimizations.css'
 import { Providers } from './providers'
+import MobileNavigationFix from '../components/MobileNavigationFix'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -34,8 +35,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  minimumScale: 1,
   maximumScale: 5,
   userScalable: true,
+  viewportFit: 'cover',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
     { media: '(prefers-color-scheme: dark)', color: '#000000' },
@@ -49,8 +52,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      </head>
       <body className={inter.className}>
         <Providers>
+          <MobileNavigationFix />
           {children}
         </Providers>
       </body>
