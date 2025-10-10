@@ -64,15 +64,50 @@ app.use(helmet({
 }));
 
 // CORS configuration
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? [
-        'https://nexflare-frontend.onrender.com',
-        'https://nexflare-admin.onrender.com'
-      ] 
-    : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003'],
+const corsOptions = {
+  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = process.env.NODE_ENV === 'production' 
+      ? [
+          'https://nexflare-frontend.onrender.com',
+          'https://nexflare-admin.onrender.com'
+        ] 
+      : [
+          'http://localhost:3000', 
+          'http://localhost:3001', 
+          'http://localhost:3002', 
+          'http://localhost:3003',
+          'http://127.0.0.1:3000',
+          'http://127.0.0.1:3001'
+        ];
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log(`CORS: Blocked origin ${origin}`);
+      callback(new Error('Not allowed by CORS'), false);
+    }
+  },
   credentials: true,
-}));
+  optionsSuccessStatus: 200, // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['X-Total-Count', 'X-Rate-Limit-Remaining']
+};
+
+app.use(cors(corsOptions));
+
+// Debug middleware to log CORS requests
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    console.log(`CORS Preflight: ${req.method} ${req.url} from ${req.headers.origin}`);
+  } else {
+    console.log(`Request: ${req.method} ${req.url} from ${req.headers.origin}`);
+  }
+  next();
+});
 
 // Rate limiting
 app.use(rateLimit({
