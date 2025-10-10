@@ -24,15 +24,27 @@ const connectDB = async (options: ConnectionOptions = {}): Promise<void> => {
 
   const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/nexflare';
   
+  // Validate and clean the MongoDB URI
+  const cleanUri = mongoUri.trim().replace(/\s/g, '');
+  
   console.log(`🔄 Attempting to connect to MongoDB...`);
-  console.log(`📍 Connection string: ${mongoUri.replace(/\/\/.*@/, '//***:***@')}`);
+  console.log(`📍 Raw URI length: ${mongoUri.length}`);
+  console.log(`📍 Cleaned URI length: ${cleanUri.length}`);
+  console.log(`📍 URI starts with: ${cleanUri.substring(0, 20)}...`);
   console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+  
+  // Validate URI format
+  if (!cleanUri.startsWith('mongodb://') && !cleanUri.startsWith('mongodb+srv://')) {
+    console.error(`❌ Invalid MongoDB URI format. URI: "${cleanUri}"`);
+    console.error(`❌ Expected format: mongodb:// or mongodb+srv://`);
+    throw new Error('Invalid MongoDB connection string format');
+  }
 
   let retries = 0;
   
   while (retries < maxRetries) {
     try {
-      const conn = await mongoose.connect(mongoUri, mongooseOptions);
+      const conn = await mongoose.connect(cleanUri, mongooseOptions);
       
       console.log(`✅ MongoDB Connected Successfully!`);
       console.log(`📦 Host: ${conn.connection.host}`);
