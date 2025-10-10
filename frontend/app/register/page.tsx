@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { AppDispatch, RootState } from '../../lib/store'
-import { register } from '../../lib/features/authSlice'
+import { register, clearError } from '../../lib/features/authSlice'
 import AnimatedLogo from '../../components/AnimatedLogo'
 import StyledText from '../../components/StyledText'
 
@@ -22,7 +22,8 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Reset password error
+    // Clear any previous errors
+    dispatch(clearError())
     setPasswordError('')
     
     // Validate passwords match
@@ -38,7 +39,9 @@ export default function Register() {
     }
     
     try {
-      await dispatch(register({ email, password, name })).unwrap()
+      console.log('Attempting registration with:', { email, name, password: '***' })
+      const result = await dispatch(register({ email, password, name })).unwrap()
+      console.log('Registration successful:', result)
       router.push('/')
     } catch (error) {
       console.error('Registration failed:', error)

@@ -29,19 +29,50 @@ const initialState: AuthState = {
 
 export const login = createAsyncThunk(
   'auth/login',
-  async ({ email, password }: { email: string; password: string }) => {
-    const response = await axios.post(`${API_URL}/auth/login`, { email, password })
-    localStorage.setItem('token', response.data.token)
-    return response.data
+  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      console.log('Attempting login with API_URL:', API_URL)
+      const response = await axios.post(`${API_URL}/auth/login`, { 
+        email, 
+        password 
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      console.log('Login successful:', response.data)
+      localStorage.setItem('token', response.data.token)
+      return response.data
+    } catch (error: any) {
+      console.error('Login error:', error)
+      const message = error.response?.data?.message || error.message || 'Login failed'
+      return rejectWithValue(message)
+    }
   }
 )
 
 export const register = createAsyncThunk(
   'auth/register',
-  async ({ email, password, name }: { email: string; password: string; name: string }) => {
-    const response = await axios.post(`${API_URL}/auth/register`, { email, password, name })
-    localStorage.setItem('token', response.data.token)
-    return response.data
+  async ({ email, password, name }: { email: string; password: string; name: string }, { rejectWithValue }) => {
+    try {
+      console.log('Attempting registration with API_URL:', API_URL)
+      const response = await axios.post(`${API_URL}/auth/register`, { 
+        email, 
+        password, 
+        name 
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      console.log('Registration successful:', response.data)
+      localStorage.setItem('token', response.data.token)
+      return response.data
+    } catch (error: any) {
+      console.error('Registration error:', error)
+      const message = error.response?.data?.message || error.message || 'Registration failed'
+      return rejectWithValue(message)
+    }
   }
 )
 
@@ -71,7 +102,7 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false
-        state.error = action.error.message || 'Login failed'
+        state.error = action.payload as string || action.error.message || 'Login failed'
       })
       .addCase(register.pending, (state) => {
         state.isLoading = true
@@ -84,7 +115,7 @@ const authSlice = createSlice({
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false
-        state.error = action.error.message || 'Registration failed'
+        state.error = action.payload as string || action.error.message || 'Registration failed'
       })
   },
 })
