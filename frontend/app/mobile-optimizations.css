@@ -97,26 +97,62 @@ body {
 
 /* FORCE mobile navigation to be visible */
 @media screen and (max-width: 768px) {
-  /* Force hamburger menu to show */
+  /* Force hamburger menu button to be visible and functional */
+  #mobile-menu-button,
   header button[class*="md:hidden"] {
-    display: block !important;
+    display: flex !important;
     opacity: 1 !important;
     visibility: visible !important;
+    z-index: 1000 !important;
+    position: relative !important;
+  }
+  
+  /* Ensure mobile menu shows/hides properly */
+  .mobile-menu-container {
+    display: block !important;
+    width: 100% !important;
+    position: relative !important;
+    z-index: 999 !important;
+  }
+  
+  .mobile-menu-container.hidden {
+    display: none !important;
   }
   
   /* Force desktop menu to hide */
+  #desktop-nav,
   header nav[class*="hidden md:flex"] {
     display: none !important;
   }
   
   /* Force desktop sign-in to hide */
+  #desktop-signin,
   header a[class*="hidden md:flex"] {
     display: none !important;
   }
   
   /* Force desktop user menu to hide */
+  #desktop-user-menu,
   header div[class*="hidden md:block"] {
     display: none !important;
+  }
+  
+  /* Ensure mobile menu content is accessible */
+  #mobile-menu {
+    display: block !important;
+    width: 100% !important;
+    background: rgba(0, 0, 0, 0.95) !important;
+    backdrop-filter: none !important;
+  }
+  
+  /* Mobile menu items styling */
+  #mobile-menu nav {
+    display: block !important;
+  }
+  
+  /* Fix mobile menu toggle animation */
+  #mobile-menu-button div span {
+    transition: all 0.3s ease !important;
   }
   
   /* Ensure mobile menu is accessible */

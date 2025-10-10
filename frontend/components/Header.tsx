@@ -115,71 +115,84 @@ export default function Header() {
       </div>
 
       {/* Mobile Menu - SHOW ON MOBILE ONLY */}
-      <div className={`md:hidden mobile-menu-container bg-background/95 backdrop-blur-sm border-t border-gray-700 transition-all duration-300 ${isMobileMenuOpen ? 'block' : 'hidden'}`} id="mobile-menu">
-        <nav className="px-4 py-4 space-y-2">
-          <Link 
-            href="/" 
-            className="block px-4 py-3 text-neon-green hover:text-metallic-gold font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <span className="graphics-icon graphics-icon-star mr-2">⭐</span>
-            Home
-          </Link>
-          <Link 
-            href="/browse" 
-            className="block px-4 py-3 text-neon-pink hover:text-ocean font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <span className="graphics-icon graphics-icon-diamond mr-2">💎</span>
-            Browse
-          </Link>
-          <Link 
-            href="/my-list" 
-            className="block px-4 py-3 text-fire hover:text-metallic-silver font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <span className="graphics-icon graphics-icon-fire mr-2">🎬</span>
-            My List
-          </Link>
-          
-          {/* Mobile User Section */}
-          <div className="border-t border-gray-700 pt-4 mt-4">
-            {user ? (
-              <>
-                <div className="px-4 py-2 text-center text-metallic-gold font-bold flex items-center justify-center mb-2">
-                  <span className="graphics-icon graphics-icon-diamond mr-2">👤</span>
-                  Welcome, {user.name}!
-                </div>
-                <Link 
-                  href="/profile" 
-                  className="block px-4 py-3 text-ocean hover:text-neon-green font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <span className="graphics-icon graphics-icon-star mr-2">⚙️</span>
-                  Profile
-                </Link>
-                <button 
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-3 text-fire hover:text-neon-pink font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
-                >
-                  <span className="graphics-icon graphics-icon-fire mr-2">🚪</span>
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <Link 
-                href="/login" 
-                className="block mx-4 mb-2 bg-gradient-to-r from-primary to-primary-light hover:from-primary-dark hover:to-primary px-6 py-3 rounded-lg transition-all duration-300 font-black text-rainbow shadow-lg text-center flex items-center justify-center"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <span className="graphics-icon graphics-icon-sparkle mr-2">🌟</span>
-                Sign In
-                <span className="graphics-icon graphics-icon-diamond ml-2">💫</span>
-              </Link>
-            )}
-          </div>
-        </nav>
-      </div>
+      {isMobileMenuOpen && (
+        <div className="md:hidden mobile-menu-container bg-background/95 backdrop-blur-sm border-t border-gray-700 transition-all duration-300" id="mobile-menu">
+          <nav className="px-4 py-4 space-y-2">
+            <Link 
+              href="/" 
+              className="block px-4 py-3 text-neon-green hover:text-metallic-gold font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="graphics-icon graphics-icon-star mr-2">⭐</span>
+              Home
+            </Link>
+            <Link 
+              href="/browse" 
+              className="block px-4 py-3 text-neon-pink hover:text-ocean font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="graphics-icon graphics-icon-diamond mr-2">💎</span>
+              Browse
+            </Link>
+            <Link 
+              href="/my-list" 
+              className="block px-4 py-3 text-fire hover:text-metallic-silver font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="graphics-icon graphics-icon-fire mr-2">🎬</span>
+              My List
+            </Link>
+            
+            {/* Mobile User Section */}
+            <div className="border-t border-gray-700 pt-4 mt-4">
+              {user ? (
+                <>
+                  <div className="px-4 py-2 text-center text-metallic-gold font-bold flex items-center justify-center mb-2">
+                    <span className="graphics-icon graphics-icon-diamond mr-2">👤</span>
+                    Welcome, {user.name}!
+                  </div>
+                  <Link 
+                    href="/profile" 
+                    className="block px-4 py-3 text-ocean hover:text-neon-green font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <span className="graphics-icon graphics-icon-star mr-2">⚙️</span>
+                    Profile
+                  </Link>
+                  <button 
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-3 text-fire hover:text-neon-pink font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+                  >
+                    <span className="graphics-icon graphics-icon-fire mr-2">🚪</span>
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link 
+                    href="/login" 
+                    className="block mx-4 mb-2 bg-gradient-to-r from-primary to-primary-light hover:from-primary-dark hover:to-primary px-6 py-3 rounded-lg transition-all duration-300 font-black text-rainbow shadow-lg text-center flex items-center justify-center"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <span className="graphics-icon graphics-icon-sparkle mr-2">🌟</span>
+                    Sign In
+                    <span className="graphics-icon graphics-icon-diamond ml-2">💫</span>
+                  </Link>
+                  <Link 
+                    href="/register" 
+                    className="block mx-4 mb-2 bg-gradient-to-r from-secondary to-accent px-6 py-3 rounded-lg transition-all duration-300 font-bold text-white shadow-lg text-center flex items-center justify-center"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <span className="graphics-icon graphics-icon-star mr-2">⭐</span>
+                    Register
+                    <span className="graphics-icon graphics-icon-fire ml-2">🔥</span>
+                  </Link>
+                </>
+              )}
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   )
 }
