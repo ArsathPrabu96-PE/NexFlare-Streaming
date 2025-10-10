@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Header from '../components/Header'
-import Hero from '../components/Hero'
+import OptimizedHero from '../components/OptimizedHero'
 import VideoRow from '../components/VideoRow'
 import { mockVideos, getTrendingVideos, getVideosByCategory, getPremiumVideos } from '../lib/mockData'
 
@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <Hero video={trending[0]} />
+      <OptimizedHero video={trending[0]} />
       <div className="px-6 md:px-12 lg:px-20 space-y-12 pb-20">
         <div className="space-y-16">
           <VideoRow title="Trending Now" videos={trending} />

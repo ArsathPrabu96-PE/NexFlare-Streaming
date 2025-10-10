@@ -1,0 +1,240 @@
+/* Graphics Performance Optimization CSS */
+
+/* Performance-based animation controls */
+.disable-animations *,
+.disable-animations *::before,
+.disable-animations *::after {
+  animation-duration: 0.01s !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.1s !important;
+}
+
+.disable-particles .floating-particles,
+.disable-particles .particle,
+.disable-particles .particle-trail,
+.disable-particles .particle-trail-premium {
+  display: none !important;
+}
+
+.disable-gradients .bg-gradient-to-r,
+.disable-gradients .bg-gradient-to-l,
+.disable-gradients .bg-gradient-to-t,
+.disable-gradients .bg-gradient-to-b,
+.disable-gradients .bg-gradient-radial,
+.disable-gradients .text-gradient {
+  background: #1a1a1a !important;
+  background-image: none !important;
+}
+
+.disable-blur .backdrop-blur,
+.disable-blur .backdrop-blur-sm,
+.disable-blur .backdrop-blur-md,
+.disable-blur .backdrop-blur-lg,
+.disable-blur .backdrop-blur-xl {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.disable-shadows .shadow,
+.disable-shadows .shadow-sm,
+.disable-shadows .shadow-md,
+.disable-shadows .shadow-lg,
+.disable-shadows .shadow-xl,
+.disable-shadows .shadow-2xl {
+  box-shadow: none !important;
+}
+
+/* Optimized animation keyframes - using transform only */
+@keyframes optimized-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes optimized-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+@keyframes optimized-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes optimized-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes optimized-fade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* GPU-accelerated transform-based animations */
+.optimized-float {
+  animation: optimized-float var(--animation-duration, 3s) ease-in-out infinite;
+  will-change: transform;
+}
+
+.optimized-pulse {
+  animation: optimized-pulse var(--animation-duration, 2s) ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.optimized-rotate {
+  animation: optimized-rotate var(--animation-duration, 10s) linear infinite;
+  will-change: transform;
+}
+
+.optimized-slide {
+  animation: optimized-slide var(--animation-duration, 3s) ease-in-out infinite;
+  will-change: transform;
+}
+
+.optimized-fade {
+  animation: optimized-fade var(--animation-duration, 1s) ease-out;
+  will-change: opacity;
+}
+
+/* Performance-optimized component styles */
+.performance-hero {
+  background-attachment: scroll;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.performance-card {
+  transition: transform var(--animation-duration, 200ms) ease;
+  will-change: transform;
+}
+
+.performance-card:hover {
+  transform: translateY(-5px);
+}
+
+.performance-button {
+  transition: all var(--animation-duration, 200ms) ease;
+  will-change: transform, background-color;
+}
+
+.performance-button:hover {
+  transform: scale(1.02);
+}
+
+/* Efficient text effects */
+.efficient-glow {
+  text-shadow: 0 0 10px currentColor;
+}
+
+.efficient-gradient-text {
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Optimized loading states */
+.efficient-skeleton {
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+  animation: efficient-loading var(--animation-duration, 1.5s) infinite;
+}
+
+@keyframes efficient-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Adaptive quality classes */
+.quality-low {
+  --animation-duration: 150ms;
+  --blur-radius: 0px;
+  --particle-count: 0;
+}
+
+.quality-medium {
+  --animation-duration: 200ms;
+  --blur-radius: 0px;
+  --particle-count: 0;
+}
+
+.quality-high {
+  --animation-duration: 300ms;
+  --blur-radius: 5px;
+  --particle-count: 30;
+}
+
+.quality-ultra {
+  --animation-duration: 400ms;
+  --blur-radius: 15px;
+  --particle-count: 100;
+}
+
+/* Device-specific optimizations */
+@media (max-width: 768px) {
+  .performance-hero {
+    background-attachment: scroll !important;
+  }
+  
+  .performance-card {
+    transform: none !important;
+  }
+  
+  .performance-card:hover {
+    transform: none !important;
+  }
+}
+
+/* High refresh rate optimizations */
+@media (min-resolution: 120dpi) {
+  .optimized-float {
+    animation-duration: calc(var(--animation-duration, 3s) * 0.8);
+  }
+  
+  .optimized-pulse {
+    animation-duration: calc(var(--animation-duration, 2s) * 0.8);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01s !important;
+  }
+}
+
+/* Memory optimization */
+.memory-efficient {
+  contain: layout style paint;
+}
+
+.memory-efficient * {
+  will-change: auto;
+}
+
+/* Force hardware acceleration only when needed */
+.hw-accelerate {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimized focus states */
+.efficient-focus:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Battery saving mode */
+@media (prefers-reduced-motion: reduce), (max-width: 768px) {
+  .battery-save * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

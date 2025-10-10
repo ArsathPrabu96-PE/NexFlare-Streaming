@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import './mobile-optimizations.css'
+import './performance-graphics.css'
 import { Providers } from './providers'
 import MobileNavigationFix from '../components/MobileNavigationFix'
 
