@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { PlayIcon, PlusIcon, HeartIcon, ShareIcon } from '@heroicons/react/24/solid'
 import { StarIcon } from '@heroicons/react/24/outline'
 import VideoPlayer from './VideoPlayer'
@@ -44,10 +45,13 @@ export default function VideoCard({ video }: VideoCardProps) {
       }}
     >
       <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl group-hover:shadow-[0_0_50px_rgba(229,9,20,0.8),_0_0_100px_rgba(59,130,246,0.4)] transition-all duration-500 border border-transparent group-hover:border-gradient-to-r group-hover:from-primary/50 group-hover:via-accent-blue/50 group-hover:to-accent-purple/50">
-        <img 
+        <Image 
           src={video.thumbnail} 
           alt={video.title}
-          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:brightness-110 group-hover:contrast-110 group-hover:saturate-110"
+          fill
+          sizes="(max-width: 768px) 200px, 300px"
+          className="object-cover transition-all duration-700 group-hover:scale-125 group-hover:brightness-110 group-hover:contrast-110 group-hover:saturate-110"
+          unoptimized
         />
         
         {/* Neon glow effect */}
