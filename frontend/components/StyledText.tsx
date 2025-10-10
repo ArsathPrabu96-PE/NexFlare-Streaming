@@ -1,19 +1,56 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 
 interface StyledTextProps {
   text: string
   className?: string
 }
 
-export default function StyledText({ text, className = '' }: StyledTextProps) {
+// Hook to detect mobile and performance preferences
+const usePerformanceMode = () => {
+  const [isMobile, setIsMobile] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    // Mark as client-side to prevent hydration mismatch
     setIsClient(true)
+    
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    }
+
+    const checkReducedMotion = () => {
+      setPrefersReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    }
+
+    checkMobile()
+    checkReducedMotion()
+
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
+
+  return { isMobile, prefersReducedMotion, isClient }
+}
+
+// Simple text component for mobile
+const SimpleText: React.FC<StyledTextProps> = memo(({ text, className = '' }) => (
+  <span className={`text-gradient ${className}`}>
+    {text}
+  </span>
+))
+
+SimpleText.displayName = 'SimpleText'
+
+export default function StyledText({ text, className = '' }: StyledTextProps) {
+  const { isMobile, prefersReducedMotion, isClient } = usePerformanceMode()
+
+  // Return simple version for mobile, reduced motion, or during SSR
+  if (!isClient || isMobile || prefersReducedMotion) {
+    return <SimpleText text={text} className={className} />
+  }
 
   const letterStyles = [
     'letter-style-1', 'letter-style-2', 'letter-style-3', 'letter-style-4', 'letter-style-5',
@@ -44,15 +81,6 @@ export default function StyledText({ text, className = '' }: StyledTextProps) {
         </span>
       )
     })
-  }
-
-  // Render simple text during SSR to prevent hydration mismatch
-  if (!isClient) {
-    return (
-      <span className={`inline-flex items-center flex-wrap ${className}`} suppressHydrationWarning>
-        {text}
-      </span>
-    )
   }
 
   return (

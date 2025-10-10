@@ -41,8 +41,8 @@ export default function Hero({ video }: HeroProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80" />
       
-      {/* Floating particles effect */}
-      <div className="absolute inset-0 opacity-30">
+      {/* Optimized floating particles effect - reduced for mobile performance */}
+      <div className="absolute inset-0 opacity-30 hidden md:block">
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
@@ -57,24 +57,30 @@ export default function Hero({ video }: HeroProps) {
         ))}
       </div>
       
+      {/* Simple static background for mobile */}
+      <div className="absolute inset-0 opacity-20 md:hidden">
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-purple-500/10 rounded-full"></div>
+      </div>
+      
       <div className="relative z-10 flex items-center h-full px-6 md:px-12 lg:px-20">
         <div className="max-w-5xl animate-in slide-in-from-left duration-1000 space-y-8">
           {/* Genre tags */}
-          <div className="flex items-center space-x-4">
-            <span className="bg-gradient-to-r from-primary/30 to-pink-500/30 backdrop-blur-sm text-neon-pink px-4 py-2 rounded-full text-sm font-bold border border-primary/50 shadow-lg flex items-center">
-              <span className="graphics-icon graphics-icon-fire">🎬</span>
+          <div className="flex items-center space-x-2 md:space-x-4 flex-wrap gap-2">
+            <span className="bg-gradient-to-r from-primary/30 to-pink-500/30 backdrop-blur-sm text-neon-pink px-3 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-bold border border-primary/50 shadow-lg flex items-center">
+              <span className="graphics-icon graphics-icon-fire hidden md:inline">🎬</span>
               Sci-Fi
-              <span className="graphics-icon graphics-icon-sparkle">⚡</span>
+              <span className="graphics-icon graphics-icon-sparkle hidden md:inline">⚡</span>
             </span>
-            <span className="bg-gradient-to-r from-yellow-500/30 to-orange-500/30 backdrop-blur-sm text-metallic-gold px-4 py-2 rounded-full text-sm font-bold border border-yellow-500/50 shadow-lg flex items-center">
-              <span className="graphics-icon graphics-icon-star">⭐</span>
+            <span className="bg-gradient-to-r from-yellow-500/30 to-orange-500/30 backdrop-blur-sm text-metallic-gold px-3 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-bold border border-yellow-500/50 shadow-lg flex items-center">
+              <span className="graphics-icon graphics-icon-star hidden md:inline">⭐</span>
               IMDB Choice
-              <span className="graphics-icon graphics-icon-diamond">👑</span>
+              <span className="graphics-icon graphics-icon-diamond hidden md:inline">👑</span>
             </span>
-            <span className="bg-gradient-to-r from-emerald-500/30 to-teal-500/30 backdrop-blur-sm text-neon-green px-4 py-2 rounded-full text-sm font-bold border border-emerald-500/50 shadow-lg flex items-center">
-              <span className="graphics-icon graphics-icon-fire">🔥</span>
+            <span className="bg-gradient-to-r from-emerald-500/30 to-teal-500/30 backdrop-blur-sm text-neon-green px-3 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-bold border border-emerald-500/50 shadow-lg flex items-center">
+              <span className="graphics-icon graphics-icon-fire hidden md:inline">🔥</span>
               Trending
-              <span className="graphics-icon graphics-icon-sparkle">💥</span>
+              <span className="graphics-icon graphics-icon-sparkle hidden md:inline">💥</span>
             </span>
           </div>
           

@@ -1,6 +1,77 @@
-import React from 'react'
+'use client'
 
-const AnimatedLogo: React.FC = () => {
+import React, { useState, useEffect, memo } from 'react'
+
+// Hook to detect mobile devices and performance preferences
+const usePerformanceMode = () => {
+  const [isMobile, setIsMobile] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+
+  useEffect(() => {
+    // Detect mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    }
+
+    // Check reduced motion preference
+    const checkReducedMotion = () => {
+      setPrefersReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    }
+
+    checkMobile()
+    checkReducedMotion()
+
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  return { isMobile, prefersReducedMotion }
+}
+
+// Simple static logo for mobile/reduced motion
+const SimpleLogo: React.FC = memo(() => (
+  <div className="flex items-center space-x-3">
+    <div className="relative flex items-center">
+      {/* Simple static film reel */}
+      <div className="w-10 h-10 border-2 border-slate-300 rounded-full relative">
+        <div className="absolute inset-1 border border-slate-400/70 rounded-full"></div>
+        <div className="absolute top-1/2 left-1/2 w-3 h-3 bg-slate-300 rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+        {/* Static spokes */}
+        <div className="absolute top-0 left-1/2 w-0.5 h-4 bg-slate-300 transform -translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-1/2 w-0.5 h-4 bg-slate-300 transform -translate-x-1/2"></div>
+        <div className="absolute left-0 top-1/2 h-0.5 w-4 bg-slate-300 transform -translate-y-1/2"></div>
+        <div className="absolute right-0 top-1/2 h-0.5 w-4 bg-slate-300 transform -translate-y-1/2"></div>
+      </div>
+      
+      {/* Simple play icon */}
+      <div className="relative ml-4">
+        <div className="w-8 h-8 bg-slate-400/30 rounded-full flex items-center justify-center">
+          <div className="w-0 h-0 border-l-[8px] border-l-slate-200 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1"></div>
+        </div>
+      </div>
+    </div>
+    
+    {/* Simple text */}
+    <div className="relative">
+      <div className="text-slate-200 font-bold text-sm tracking-wider">
+        STREAM
+      </div>
+    </div>
+  </div>
+))
+
+SimpleLogo.displayName = 'SimpleLogo'
+
+// Full animated logo for desktop
+const AnimatedLogo: React.FC = memo(() => {
+  const { isMobile, prefersReducedMotion } = usePerformanceMode()
+
+  // Return simple version for mobile or reduced motion
+  if (isMobile || prefersReducedMotion) {
+    return <SimpleLogo />
+  }
+
   return (
     <div className="flex items-center space-x-3 logo-float">
       {/* Main Animated Graphics */}
@@ -55,6 +126,8 @@ const AnimatedLogo: React.FC = () => {
       </div>
     </div>
   )
-}
+})
+
+AnimatedLogo.displayName = 'AnimatedLogo'
 
 export default AnimatedLogo

@@ -1,0 +1,186 @@
+/* Mobile Performance Optimizations for NexFlare */
+
+/* Reduce animations on mobile devices and low-power devices */
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
+  /* Disable heavy animations on mobile */
+  .logo-float,
+  .reel-spin,
+  .spoke-glow,
+  .film-glow,
+  .stream-flow,
+  .pulse-ring-1,
+  .pulse-ring-2,
+  .pulse-wave,
+  .text-shimmer,
+  .layer-drift,
+  .layer-drift-2,
+  .gradient-animated {
+    animation: none !important;
+  }
+
+  /* Reduce letter animations to simple static styles */
+  .letter-style-1,
+  .letter-style-2,
+  .letter-style-3,
+  .letter-style-4,
+  .letter-style-5,
+  .letter-style-6,
+  .letter-style-7,
+  .letter-style-8,
+  .letter-style-9,
+  .letter-style-10 {
+    animation: none !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  /* Disable mega graphics animations */
+  .mega-graphics-icon {
+    animation: none !important;
+  }
+
+  /* Disable all animate-pulse and complex animations */
+  .animate-pulse,
+  .animate-bounce,
+  .animate-spin {
+    animation: none !important;
+  }
+
+  /* Simplify background effects */
+  .text-rainbow,
+  .text-fire,
+  .text-ocean,
+  .text-neon-green,
+  .text-neon-pink {
+    animation: none !important;
+    text-shadow: none !important;
+    background: linear-gradient(135deg, #E50914 0%, #FF6B35 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  /* Remove heavy blur effects */
+  .backdrop-blur-xl,
+  .backdrop-blur-lg,
+  .backdrop-blur-md {
+    backdrop-filter: none !important;
+  }
+
+  /* Simplify glass effects */
+  .glass,
+  .glass-strong {
+    background: rgba(0, 0, 0, 0.8) !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Remove transform animations from buttons */
+  button:hover {
+    transform: none !important;
+  }
+
+  /* Disable ripple effects on mobile */
+  .animate-ping {
+    animation: none !important;
+  }
+}
+
+/* Optimize for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  *:hover {
+    transform: none !important;
+    scale: none !important;
+  }
+
+  /* Improve touch target sizes */
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Disable scroll effects that can cause lag */
+  .parallax,
+  .sticky {
+    position: static !important;
+  }
+}
+
+/* Battery and performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile-specific font optimizations */
+@media (max-width: 768px) {
+  /* Reduce font weights to improve rendering performance */
+  .font-black {
+    font-weight: 700 !important;
+  }
+  
+  .font-bold {
+    font-weight: 600 !important;
+  }
+
+  /* Optimize text rendering */
+  * {
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Reduce gradient complexity */
+  .bg-gradient-to-br,
+  .bg-gradient-to-r,
+  .bg-gradient-to-l {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%) !important;
+  }
+}
+
+/* Intersection Observer optimizations for mobile */
+@media (max-width: 768px) {
+  /* Reduce intersection thresholds for better performance */
+  .lazy-load {
+    content-visibility: auto;
+    contain-intrinsic-size: 200px;
+  }
+}
+
+/* Memory and GPU optimizations */
+@media (max-width: 768px) {
+  /* Limit layers to essential elements only */
+  .will-change-transform {
+    will-change: auto !important;
+  }
+
+  /* Reduce shadow complexity */
+  .shadow-lg,
+  .shadow-xl,
+  .shadow-2xl {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Optimize filter usage */
+  .filter,
+  .blur-xl,
+  .blur-lg {
+    filter: none !important;
+  }
+}
+
+/* Viewport optimizations */
+@viewport {
+  width: device-width;
+  initial-scale: 1;
+  maximum-scale: 5;
+  user-scalable: yes;
+}

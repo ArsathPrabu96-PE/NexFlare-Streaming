@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, memo, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import { PlayIcon, PlusIcon, HeartIcon, ShareIcon } from '@heroicons/react/24/solid'
 import { StarIcon } from '@heroicons/react/24/outline'
@@ -22,36 +22,126 @@ interface Video {
 
 interface VideoCardProps {
   video: Video
+  priority?: boolean
+  index?: number
 }
 
-export default function VideoCard({ video }: VideoCardProps) {
+// Hook to detect mobile devices
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false)
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+  
+  return isMobile
+}
+
+const VideoCard: React.FC<VideoCardProps> = memo(({ video, priority = false, index = 0 }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [showPlayer, setShowPlayer] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const isMobile = useIsMobile()
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = useCallback((seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`
+  }, [])
+
+  const handleMouseEnter = useCallback(() => {
+    if (!isMobile) {
+      setIsHovered(true)
+    }
+  }, [isMobile])
+
+  const handleMouseLeave = useCallback(() => {
+    if (!isMobile) {
+      setIsHovered(false)
+    }
+  }, [isMobile])
+
+  const handleImageLoad = useCallback(() => {
+    setImageLoaded(true)
+  }, [])
+
+  // Simplified mobile version
+  if (isMobile) {
+    return (
+      <div className="group relative min-w-[150px] cursor-pointer">
+        <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg">
+          <div className={`absolute inset-0 bg-gray-800 animate-pulse transition-opacity duration-300 ${imageLoaded ? 'opacity-0' : 'opacity-100'}`} />
+          <Image 
+            src={video.thumbnail} 
+            alt={video.title}
+            width={300}
+            height={169}
+            className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            priority={priority}
+            loading={priority ? "eager" : "lazy"}
+            onLoad={handleImageLoad}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
+          
+          {/* Mobile overlay */}
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-active:opacity-100 transition-opacity">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <PlayIcon className="w-12 h-12 text-white" />
+            </div>
+          </div>
+          
+          {/* Duration badge */}
+          <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
+            {formatDuration(video.duration)}
+          </div>
+        </div>
+        
+        {/* Simplified info */}
+        <div className="p-2 space-y-1">
+          <h3 className="font-semibold text-sm text-white line-clamp-2 leading-tight">
+            {video.title}
+          </h3>
+          <div className="flex items-center justify-between text-xs text-gray-400">
+            <span>{video.releaseYear}</span>
+            <span className="text-yellow-500">{video.rating}</span>
+          </div>
+        </div>
+      </div>
+    )
   }
 
+  // Full desktop version with animations
   return (
     <div 
       className="group relative min-w-[200px] md:min-w-[300px] cursor-pointer transform transition-all duration-500 hover:scale-110 hover:z-20 hover:rotate-1 perspective-1000"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       style={{
         filter: isHovered ? 'drop-shadow(0 25px 50px rgba(229, 9, 20, 0.6)) drop-shadow(0 0 30px rgba(59, 130, 246, 0.3))' : 'none'
       }}
     >
       <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl group-hover:shadow-[0_0_50px_rgba(229,9,20,0.8),_0_0_100px_rgba(59,130,246,0.4)] transition-all duration-500 border border-transparent group-hover:border-gradient-to-r group-hover:from-primary/50 group-hover:via-accent-blue/50 group-hover:to-accent-purple/50">
+        {/* Loading skeleton */}
+        <div className={`absolute inset-0 bg-gray-800 animate-pulse transition-opacity duration-300 ${imageLoaded ? 'opacity-0' : 'opacity-100'}`} />
+        
         <Image 
           src={video.thumbnail} 
           alt={video.title}
-          fill
-          sizes="(max-width: 768px) 200px, 300px"
-          className="object-cover transition-all duration-700 group-hover:scale-125 group-hover:brightness-110 group-hover:contrast-110 group-hover:saturate-110"
-          unoptimized
+          width={400}
+          height={225}
+          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          priority={priority}
+          loading={priority ? "eager" : "lazy"}
+          onLoad={handleImageLoad}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
         
         {/* Neon glow effect */}
@@ -176,4 +266,8 @@ export default function VideoCard({ video }: VideoCardProps) {
       )}
     </div>
   )
-}
+})
+
+VideoCard.displayName = 'VideoCard'
+
+export default VideoCard

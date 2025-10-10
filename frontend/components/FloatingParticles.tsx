@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
 
 interface Particle {
   id: number
@@ -18,17 +18,60 @@ interface FloatingParticlesProps {
   className?: string
 }
 
+// Hook to detect mobile devices and performance preferences
+const usePerformanceMode = () => {
+  const [isMobile, setIsMobile] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    }
+
+    const checkReducedMotion = () => {
+      setPrefersReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    }
+
+    checkMobile()
+    checkReducedMotion()
+
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  return { isMobile, prefersReducedMotion }
+}
+
+// Simple static gradient for mobile
+const SimpleBackground: React.FC<{ className: string }> = memo(({ className }) => (
+  <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
+    <div className="absolute inset-0 bg-gradient-radial from-primary/5 via-transparent to-transparent" />
+  </div>
+))
+
+SimpleBackground.displayName = 'SimpleBackground'
+
 export default function FloatingParticles({ 
   count = 30, 
   colors = ['#E50914', '#FF1E2D', '#B20710', '#FF6B9D', '#9D4EDD'],
   className = ''
 }: FloatingParticlesProps) {
   const [particles, setParticles] = useState<Particle[]>([])
+  const { isMobile, prefersReducedMotion } = usePerformanceMode()
 
   useEffect(() => {
+    // Return simple background for mobile or reduced motion - but still create effect
+    if (isMobile || prefersReducedMotion) {
+      return
+    }
+
     const newParticles: Particle[] = []
     
-    for (let i = 0; i < count; i++) {
+    // Reduce particle count for performance
+    const adjustedCount = Math.min(count, 15)
+    
+    for (let i = 0; i < adjustedCount; i++) {
       newParticles.push({
         id: i,
         x: Math.random() * 100,
@@ -41,7 +84,12 @@ export default function FloatingParticles({
     }
     
     setParticles(newParticles)
-  }, [count, colors])
+  }, [count, colors, isMobile, prefersReducedMotion])
+
+  // Return simple background for mobile or reduced motion
+  if (isMobile || prefersReducedMotion) {
+    return <SimpleBackground className={className} />
+  }
 
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
@@ -63,7 +111,7 @@ export default function FloatingParticles({
         />
       ))}
       
-      {/* Additional glow effects */}
+      {/* Reduced glow effects */}
       <div className="absolute inset-0 bg-gradient-radial from-primary/5 via-transparent to-transparent animate-pulse" />
       <div className="absolute inset-0 bg-gradient-conic from-primary/10 via-purple-500/5 to-primary/10 animate-spin" style={{ animationDuration: '20s' }} />
     </div>
