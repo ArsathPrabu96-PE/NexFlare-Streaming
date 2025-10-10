@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'NexFlare Team' }],
   creator: 'NexFlare',
   publisher: 'NexFlare',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
   formatDetection: {
     email: false,
     address: false,

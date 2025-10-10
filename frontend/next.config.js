@@ -28,24 +28,8 @@ const nextConfig = {
   // Build optimizations
   swcMinify: true,
   
-  // Headers for better caching and performance
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY'
-          },
-        ],
-      },
-    ]
-  },
+  // Note: Headers are not supported with static export
+  // Performance optimizations are handled via other means
 }
 
 module.exports = nextConfig
