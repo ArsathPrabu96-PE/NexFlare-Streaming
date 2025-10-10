@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
 import connectDB from './config/database';
 import authRoutes from './routes/auth';
 import videoRoutes from './routes/videos';
+
+// Force redeploy - fixing registration issue
 import userRoutes from './routes/users';
 
 // Load environment variables from .env file
