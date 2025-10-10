@@ -11,7 +11,9 @@ export default function ProfilePage() {
   const { user, isLoading } = useSelector((state: RootState) => state.auth)
   const [isEditing, setIsEditing] = useState(false)
   const [profilePhoto, setProfilePhoto] = useState<string>('')
+  const [previewPhoto, setPreviewPhoto] = useState<string>('')
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const [hasUnsavedPhoto, setHasUnsavedPhoto] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
   
@@ -37,10 +39,28 @@ export default function ProfilePage() {
       setUploadingPhoto(true)
       const reader = new FileReader()
       reader.onload = (e) => {
-        setProfilePhoto(e.target?.result as string)
+        setPreviewPhoto(e.target?.result as string)
+        setHasUnsavedPhoto(true)
         setUploadingPhoto(false)
       }
       reader.readAsDataURL(file)
+    }
+  }
+
+  const handleSavePhoto = () => {
+    if (previewPhoto) {
+      setProfilePhoto(previewPhoto)
+      setHasUnsavedPhoto(false)
+      // Here you would typically upload to your backend
+      console.log('Photo saved successfully!')
+    }
+  }
+
+  const handleCancelPhoto = () => {
+    setPreviewPhoto('')
+    setHasUnsavedPhoto(false)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
     }
   }
 
@@ -129,9 +149,9 @@ export default function ProfilePage() {
             <div className="flex flex-col lg:flex-row items-center lg:items-start mb-12 space-y-6 lg:space-y-0 lg:space-x-8">
               <div className="relative group">
                 <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gradient-to-r from-cyan-500 to-purple-600 shadow-2xl">
-                  {profilePhoto ? (
+                  {(previewPhoto || profilePhoto) ? (
                     <img 
-                      src={profilePhoto} 
+                      src={previewPhoto || profilePhoto} 
                       alt="Profile" 
                       className="w-full h-full object-cover"
                     />
@@ -141,6 +161,13 @@ export default function ProfilePage() {
                     </div>
                   )}
                 </div>
+                
+                {/* Preview indicator */}
+                {hasUnsavedPhoto && (
+                  <div className="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs px-2 py-1 rounded-full font-bold">
+                    Preview
+                  </div>
+                )}
                 
                 {/* Upload Button Overlay */}
                 <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
@@ -172,13 +199,35 @@ export default function ProfilePage() {
                     {profileData.subscription} Plan
                   </span>
                 </p>
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploadingPhoto}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
-                >
-                  {uploadingPhoto ? 'Uploading...' : 'Change Photo'}
-                </button>
+                
+                {/* Photo Action Buttons */}
+                {hasUnsavedPhoto ? (
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      onClick={handleSavePhoto}
+                      className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center"
+                    >
+                      <span className="mr-2">💾</span>
+                      Save Photo
+                    </button>
+                    <button
+                      onClick={handleCancelPhoto}
+                      className="px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center"
+                    >
+                      <span className="mr-2">❌</span>
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadingPhoto}
+                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center"
+                  >
+                    <span className="mr-2">{uploadingPhoto ? '📤' : '📷'}</span>
+                    {uploadingPhoto ? 'Loading...' : 'Change Photo'}
+                  </button>
+                )}
               </div>
             </div>
 

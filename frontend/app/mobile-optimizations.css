@@ -177,6 +177,68 @@
   }
 }
 
+/* Mobile Navigation Specific Optimizations */
+@media (max-width: 768px) {
+  /* Ensure mobile menu is always accessible */
+  header {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Mobile menu animations */
+  .mobile-menu-enter {
+    animation: slideInFromTop 0.3s ease-out;
+  }
+
+  @keyframes slideInFromTop {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Ensure buttons are touch-friendly */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+
+  /* Prevent zoom on form inputs */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  /* Mobile-specific hover states */
+  @media (hover: none) and (pointer: coarse) {
+    button:hover,
+    a:hover,
+    .hover\:scale-105:hover {
+      transform: none !important;
+    }
+  }
+}
+
+/* Prevent viewport zooming issues */
+@media screen and (max-width: 768px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
 /* Viewport optimizations */
 @viewport {
   width: device-width;

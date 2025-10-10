@@ -10,11 +10,14 @@ import AnimatedLogo from './AnimatedLogo'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { user } = useSelector((state: RootState) => state.auth)
   const dispatch = useDispatch()
 
   const handleLogout = () => {
     dispatch(logout())
+    setIsMenuOpen(false)
+    setIsMobileMenuOpen(false)
   }
 
   return (
@@ -23,7 +26,7 @@ export default function Header() {
         <div className="flex items-center space-x-8">
           <div className="flex items-center space-x-3">
             <AnimatedLogo />
-            <Link href="/" className="text-rainbow text-display text-3xl font-black tracking-tight hover:scale-105 transition-transform duration-300 flex items-center">
+            <Link href="/" className="text-rainbow text-display text-2xl md:text-3xl font-black tracking-tight hover:scale-105 transition-transform duration-300 flex items-center">
               <span className="graphics-icon graphics-icon-fire">🔥</span>
               NEXFLARE
               <span className="graphics-icon graphics-icon-sparkle">✨</span>
@@ -46,18 +49,20 @@ export default function Header() {
         </div>
 
         <div className="flex items-center space-x-4">
+          {/* Search Button */}
           <button className="p-2 hover:bg-surface rounded-full transition-all duration-300 group">
             <MagnifyingGlassIcon className="w-6 h-6 text-ocean group-hover:text-neon-green icon-glow group-hover:scale-110 transition-all duration-300" />
           </button>
           
+          {/* Desktop User Menu */}
           {user ? (
-            <div className="relative">
+            <div className="relative hidden md:block">
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="flex items-center space-x-2 p-2 hover:bg-surface rounded-lg transition-all duration-300 group"
               >
                 <UserCircleIcon className="w-6 h-6 text-metallic-gold group-hover:text-rainbow icon-glow transition-all duration-300" />
-                <span className="hidden md:block text-neon-pink font-bold group-hover:text-metallic-silver flex items-center">
+                <span className="text-neon-pink font-bold group-hover:text-metallic-silver flex items-center">
                   <span className="graphics-icon graphics-icon-diamond">👤</span>
                   {user.name}
                 </span>
@@ -82,15 +87,96 @@ export default function Header() {
           ) : (
             <Link 
               href="/login" 
-              className="bg-gradient-to-r from-primary to-primary-light hover:from-primary-dark hover:to-primary px-6 py-2 rounded-lg transition-all duration-300 font-black text-rainbow shadow-lg hover:shadow-xl hover:scale-105 flex items-center"
+              className="hidden md:flex bg-gradient-to-r from-primary to-primary-light hover:from-primary-dark hover:to-primary px-6 py-2 rounded-lg transition-all duration-300 font-black text-rainbow shadow-lg hover:shadow-xl hover:scale-105 items-center"
             >
               <span className="graphics-icon graphics-icon-sparkle">🌟</span>
               Sign In
               <span className="graphics-icon graphics-icon-diamond">💫</span>
             </Link>
           )}
+
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 hover:bg-surface rounded-lg transition-all duration-300"
+          >
+            <div className="w-6 h-6 flex flex-col justify-center items-center">
+              <span className={`block w-5 h-0.5 bg-white transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1' : ''}`}></span>
+              <span className={`block w-5 h-0.5 bg-white transition-all duration-300 mt-1 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+              <span className={`block w-5 h-0.5 bg-white transition-all duration-300 mt-1 ${isMobileMenuOpen ? '-rotate-45 -translate-y-1' : ''}`}></span>
+            </div>
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-background/95 backdrop-blur-sm border-t border-gray-700">
+          <nav className="px-4 py-4 space-y-2">
+            <Link 
+              href="/" 
+              className="block px-4 py-3 text-neon-green hover:text-metallic-gold font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="graphics-icon graphics-icon-star mr-2">⭐</span>
+              Home
+            </Link>
+            <Link 
+              href="/browse" 
+              className="block px-4 py-3 text-neon-pink hover:text-ocean font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="graphics-icon graphics-icon-diamond mr-2">💎</span>
+              Browse
+            </Link>
+            <Link 
+              href="/my-list" 
+              className="block px-4 py-3 text-fire hover:text-metallic-silver font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="graphics-icon graphics-icon-fire mr-2">🎬</span>
+              My List
+            </Link>
+            
+            {/* Mobile User Section */}
+            <div className="border-t border-gray-700 pt-4 mt-4">
+              {user ? (
+                <>
+                  <div className="px-4 py-2 text-center text-metallic-gold font-bold flex items-center justify-center">
+                    <span className="graphics-icon graphics-icon-diamond mr-2">👤</span>
+                    Welcome, {user.name}!
+                  </div>
+                  <Link 
+                    href="/profile" 
+                    className="block px-4 py-3 text-ocean hover:text-neon-green font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <span className="graphics-icon graphics-icon-star mr-2">⚙️</span>
+                    Profile
+                  </Link>
+                  <button 
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-3 text-fire hover:text-neon-pink font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+                  >
+                    <span className="graphics-icon graphics-icon-fire mr-2">🚪</span>
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <Link 
+                  href="/login" 
+                  className="block mx-4 mb-2 bg-gradient-to-r from-primary to-primary-light hover:from-primary-dark hover:to-primary px-6 py-3 rounded-lg transition-all duration-300 font-black text-rainbow shadow-lg text-center flex items-center justify-center"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="graphics-icon graphics-icon-sparkle mr-2">🌟</span>
+                  Sign In
+                  <span className="graphics-icon graphics-icon-diamond ml-2">💫</span>
+                </Link>
+              )}
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   )
 }
