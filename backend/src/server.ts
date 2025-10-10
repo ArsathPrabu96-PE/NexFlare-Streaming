@@ -69,21 +69,20 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    const allowedOrigins = process.env.NODE_ENV === 'production' 
-      ? [
-          'https://nexflare-frontend.onrender.com',
-          'https://nexflare-admin.onrender.com'
-        ] 
-      : [
-          'http://localhost:3000', 
-          'http://localhost:3001', 
-          'http://localhost:3002', 
-          'http://localhost:3003',
-          'http://127.0.0.1:3000',
-          'http://127.0.0.1:3001'
-        ];
+    // Always allow localhost origins for development/testing
+    const allowedOrigins = [
+      'https://nexflare-frontend.onrender.com',
+      'https://nexflare-admin.onrender.com',
+      'http://localhost:3000', 
+      'http://localhost:3001', 
+      'http://localhost:3002', 
+      'http://localhost:3003',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001'
+    ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {
+      console.log(`CORS: Allowed origin ${origin}`);
       callback(null, true);
     } else {
       console.log(`CORS: Blocked origin ${origin}`);
