@@ -22,52 +22,40 @@ const connectDB = async (options: ConnectionOptions = {}): Promise<void> => {
     authSource: 'admin'
   };
 
-  // Try multiple ways to get the MongoDB URI (Render environment variable workaround)
-  let mongoUri = process.env.MONGODB_URI || 
-                 process.env['MONGODB_URI'] ||
-                 'mongodb://localhost:27017/nexflare';
+  // Force the correct MongoDB URI for Render deployment
+  let mongoUri = 'mongodb+srv://arsathprabu996_db_user:Prabu1996@cluster0.4twhzfv.mongodb.net/nexflare';
   
-  console.log(`🔍 Environment variables debug:`);
-  console.log(`🔍 MONGODB_URI: "${process.env.MONGODB_URI}"`);
+  // Try to read from environment variable but fallback to hardcoded value
+  const envUri = process.env.MONGODB_URI;
+  if (envUri && envUri.includes('mongodb')) {
+    let cleanEnvUri = envUri.trim();
+    // Remove "MONGODB_URI=" prefix if it exists (Render environment variable bug)
+    if (cleanEnvUri.startsWith('MONGODB_URI=')) {
+      cleanEnvUri = cleanEnvUri.replace('MONGODB_URI=', '');
+    }
+    // Remove any additional whitespace
+    cleanEnvUri = cleanEnvUri.replace(/\s/g, '');
+    
+    if (cleanEnvUri.startsWith('mongodb://') || cleanEnvUri.startsWith('mongodb+srv://')) {
+      mongoUri = cleanEnvUri;
+      console.log(`✅ Using environment MongoDB URI`);
+    }
+  }
+  
+  console.log(`� Environment variables debug:`);
+  console.log(`� MONGODB_URI: "${process.env.MONGODB_URI}"`);
   console.log(`🔍 All env keys containing 'MONGO': ${Object.keys(process.env).filter(k => k.includes('MONGO'))}`);
   
-  // Clean the MongoDB URI (handle Render environment variable issues)
-  let cleanUri = mongoUri.trim();
-  
-  // Remove "MONGODB_URI=" prefix if it exists (Render environment variable bug)
-  if (cleanUri.startsWith('MONGODB_URI=')) {
-    cleanUri = cleanUri.replace('MONGODB_URI=', '');
-    console.log(`🔧 Removed MONGODB_URI= prefix`);
-  }
-  
-  // Remove any additional whitespace
-  cleanUri = cleanUri.replace(/\s/g, '');
-  
   console.log(`🔄 Attempting to connect to MongoDB...`);
-  console.log(`📍 Raw URI: "${mongoUri}"`);
-  console.log(`📍 Raw URI length: ${mongoUri.length}`);
-  console.log(`📍 Cleaned URI length: ${cleanUri.length}`);
-  console.log(`📍 URI starts with: ${cleanUri.substring(0, 20)}...`);
+  console.log(`📍 Final URI length: ${mongoUri.length}`);
+  console.log(`📍 URI starts with: ${mongoUri.substring(0, 30)}...`);
   console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
-  
-  // Validate URI format
-  if (!cleanUri.startsWith('mongodb://') && !cleanUri.startsWith('mongodb+srv://')) {
-    console.error(`❌ Invalid MongoDB URI format.`);
-    console.error(`❌ Raw value: "${mongoUri}"`);
-    console.error(`❌ Cleaned value: "${cleanUri}"`);
-    console.error(`❌ Expected format: mongodb:// or mongodb+srv://`);
-    
-    // Try a hardcoded fallback for Render (temporary debugging)
-    const fallbackUri = 'mongodb+srv://nexflare:Arshath2005@nexflare-cluster.kzqzl.mongodb.net/nexflare';
-    console.log(`🚨 Trying fallback URI...`);
-    cleanUri = fallbackUri;
-  }
 
   let retries = 0;
   
   while (retries < maxRetries) {
     try {
-      const conn = await mongoose.connect(cleanUri, mongooseOptions);
+      const conn = await mongoose.connect(mongoUri, mongooseOptions);
       
       console.log(`✅ MongoDB Connected Successfully!`);
       console.log(`📦 Host: ${conn.connection.host}`);
