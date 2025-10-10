@@ -8,21 +8,25 @@ interface ConnectionOptions {
 const connectDB = async (options: ConnectionOptions = {}): Promise<void> => {
   const { maxRetries = 5, retryDelay = 5000 } = options;
   
-  // MongoDB connection options
+  // MongoDB connection options optimized for Render deployment
   const mongooseOptions = {
-    serverSelectionTimeoutMS: 10000, // 10 seconds
-    socketTimeoutMS: 45000, // 45 seconds
+    serverSelectionTimeoutMS: 30000, // 30 seconds for cloud deployment
+    socketTimeoutMS: 60000, // 60 seconds 
+    connectTimeoutMS: 30000, // 30 seconds
     bufferCommands: false,
     maxPoolSize: 10,
-    minPoolSize: 5,
+    minPoolSize: 2,
     maxIdleTimeMS: 30000,
-    connectTimeoutMS: 10000,
+    retryWrites: true,
+    ssl: true,
+    authSource: 'admin'
   };
 
   const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/nexflare';
   
   console.log(`🔄 Attempting to connect to MongoDB...`);
   console.log(`📍 Connection string: ${mongoUri.replace(/\/\/.*@/, '//***:***@')}`);
+  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
 
   let retries = 0;
   

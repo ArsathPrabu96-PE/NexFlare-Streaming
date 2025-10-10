@@ -99,8 +99,8 @@ app.get('/', (req, res) => {
   });
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
+// Health check endpoint for Render
+app.get('/api/health', (req, res) => {
   const dbStatus = mongoose.connection.readyState;
   const dbStates: { [key: number]: string } = {
     0: 'disconnected',
@@ -110,7 +110,7 @@ app.get('/health', (req, res) => {
   };
   
   const health = {
-    status: 'OK',
+    status: dbStatus === 1 ? 'healthy' : 'degraded',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
@@ -118,13 +118,25 @@ app.get('/health', (req, res) => {
     database: {
       status: dbStates[dbStatus] || 'unknown',
       connected: dbStatus === 1,
-      host: mongoose.connection.host || 'N/A',
-      name: mongoose.connection.name || 'N/A'
+      host: mongoose.connection.host || 'unknown',
+      name: mongoose.connection.name || 'unknown'
+    },
+    services: {
+      api: 'operational',
+      auth: 'operational',
+      videos: 'operational',
+      users: 'operational'
     }
   };
   
+  // Return appropriate HTTP status
   const httpStatus = dbStatus === 1 ? 200 : 503;
   res.status(httpStatus).json(health);
+});
+
+// Legacy health check endpoint
+app.get('/health', (req, res) => {
+  res.redirect('/api/health');
 });
 
 // Database health check endpoint
