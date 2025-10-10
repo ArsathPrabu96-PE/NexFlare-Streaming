@@ -22,12 +22,29 @@ const connectDB = async (options: ConnectionOptions = {}): Promise<void> => {
     authSource: 'admin'
   };
 
-  const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/nexflare';
+  // Try multiple ways to get the MongoDB URI (Render environment variable workaround)
+  let mongoUri = process.env.MONGODB_URI || 
+                 process.env['MONGODB_URI'] ||
+                 'mongodb://localhost:27017/nexflare';
   
-  // Validate and clean the MongoDB URI
-  const cleanUri = mongoUri.trim().replace(/\s/g, '');
+  console.log(`🔍 Environment variables debug:`);
+  console.log(`🔍 MONGODB_URI: "${process.env.MONGODB_URI}"`);
+  console.log(`🔍 All env keys containing 'MONGO': ${Object.keys(process.env).filter(k => k.includes('MONGO'))}`);
+  
+  // Clean the MongoDB URI (handle Render environment variable issues)
+  let cleanUri = mongoUri.trim();
+  
+  // Remove "MONGODB_URI=" prefix if it exists (Render environment variable bug)
+  if (cleanUri.startsWith('MONGODB_URI=')) {
+    cleanUri = cleanUri.replace('MONGODB_URI=', '');
+    console.log(`🔧 Removed MONGODB_URI= prefix`);
+  }
+  
+  // Remove any additional whitespace
+  cleanUri = cleanUri.replace(/\s/g, '');
   
   console.log(`🔄 Attempting to connect to MongoDB...`);
+  console.log(`📍 Raw URI: "${mongoUri}"`);
   console.log(`📍 Raw URI length: ${mongoUri.length}`);
   console.log(`📍 Cleaned URI length: ${cleanUri.length}`);
   console.log(`📍 URI starts with: ${cleanUri.substring(0, 20)}...`);
@@ -35,9 +52,15 @@ const connectDB = async (options: ConnectionOptions = {}): Promise<void> => {
   
   // Validate URI format
   if (!cleanUri.startsWith('mongodb://') && !cleanUri.startsWith('mongodb+srv://')) {
-    console.error(`❌ Invalid MongoDB URI format. URI: "${cleanUri}"`);
+    console.error(`❌ Invalid MongoDB URI format.`);
+    console.error(`❌ Raw value: "${mongoUri}"`);
+    console.error(`❌ Cleaned value: "${cleanUri}"`);
     console.error(`❌ Expected format: mongodb:// or mongodb+srv://`);
-    throw new Error('Invalid MongoDB connection string format');
+    
+    // Try a hardcoded fallback for Render (temporary debugging)
+    const fallbackUri = 'mongodb+srv://nexflare:Arshath2005@nexflare-cluster.kzqzl.mongodb.net/nexflare';
+    console.log(`🚨 Trying fallback URI...`);
+    cleanUri = fallbackUri;
   }
 
   let retries = 0;
