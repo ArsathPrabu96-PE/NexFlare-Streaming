@@ -45,6 +45,8 @@ export default function OptimizedHero({ video }: HeroProps) {
   const [showTrailer, setShowTrailer] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageError, setImageError] = useState(false)
+  const [floatingPosition, setFloatingPosition] = useState({ x: 0, y: 0 })
+  const [animationDirection, setAnimationDirection] = useState(1)
   
   // Performance optimization system with error handling
   let metrics, settings, frameRate, isPerformanceGood
@@ -102,6 +104,35 @@ export default function OptimizedHero({ video }: HeroProps) {
       img.src = video.thumbnail
     }
   }, [video?.thumbnail])
+
+  // Floating animation for trailer preview
+  useEffect(() => {
+    if (!showTrailer || metrics.isMobile || !settings.enableAnimations) return
+
+    const floatingAnimation = () => {
+      setFloatingPosition(prev => {
+        const maxX = 20 // Maximum horizontal movement in pixels
+        const maxY = 15 // Maximum vertical movement in pixels
+        
+        let newX = prev.x + (animationDirection * 0.5)
+        let newY = prev.y + (Math.sin(Date.now() * 0.001) * 0.3)
+        
+        // Bounce effect when reaching boundaries
+        if (newX >= maxX || newX <= -maxX) {
+          setAnimationDirection(prev => prev * -1)
+          newX = Math.max(-maxX, Math.min(maxX, newX))
+        }
+        
+        newY = Math.max(-maxY, Math.min(maxY, newY))
+        
+        return { x: newX, y: newY }
+      })
+    }
+
+    const intervalId = setInterval(floatingAnimation, 50) // Smooth 20fps animation
+    
+    return () => clearInterval(intervalId)
+  }, [showTrailer, metrics.isMobile, settings.enableAnimations, animationDirection])
 
   if (!video) {
     return (
@@ -320,34 +351,67 @@ export default function OptimizedHero({ video }: HeroProps) {
           </div>
         </div>
         
-        {/* Conditional trailer preview for high-end devices only */}
+        {/* Conditional trailer preview for high-end devices with floating animation */}
         {showTrailer && !metrics.isMobile && settings.enableAnimations && imageLoaded && !imageError && (
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 lg:bottom-8 lg:right-8 z-50 optimized-slide">
+          <div 
+            className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 lg:bottom-8 lg:right-8 z-50 optimized-slide"
+            style={{
+              transform: `translate(${floatingPosition.x}px, ${floatingPosition.y}px)`,
+              transition: 'transform 0.1s ease-out'
+            }}
+          >
             <div className={`rounded-lg p-3 border border-white/20 ${
               settings.enableBlur ? 'bg-white/10 backdrop-blur-md' : 'bg-black/80'
-            } shadow-xl hover:border-white/40 transition-all duration-300 max-w-[140px]`}>
-              <p className="text-xs text-gray-300 mb-2 text-center">Watch Trailer</p>
+            } shadow-xl hover:border-white/40 transition-all duration-300 max-w-[140px] floating-preview`}>
+              <p className="text-xs text-gray-300 mb-2 text-center animate-pulse">Watch Trailer</p>
               <button 
-                className="w-28 h-16 bg-gray-700 rounded overflow-hidden relative cursor-pointer hover:bg-gray-600 transition-colors group focus:outline-none focus:ring-2 focus:ring-white/50 mx-auto block"
+                className="w-28 h-16 bg-gray-700 rounded overflow-hidden relative cursor-pointer hover:bg-gray-600 transition-colors group focus:outline-none focus:ring-2 focus:ring-white/50 mx-auto block hover:scale-105 transform"
                 onClick={() => {
                   console.log(`Playing trailer for ${video.title}`)
-                  // Here you could open a modal with the video player or navigate to a trailer page
-                  alert(`Trailer for "${video.title}" would play here!`)
+                  // Enhanced trailer interaction
+                  alert(`🎬 Opening trailer for "${video.title}"!\n\nFeatures:\n• Full HD Quality\n• Surround Sound\n• Interactive Controls`)
                 }}
                 aria-label={`Watch ${video.title} trailer`}
+                onMouseEnter={() => {
+                  // Add subtle hover animation boost
+                  setFloatingPosition(prev => ({ 
+                    x: prev.x + (Math.random() - 0.5) * 4, 
+                    y: prev.y + (Math.random() - 0.5) * 4 
+                  }))
+                }}
               >
                 <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <PlayIcon className="w-5 h-5 text-white group-hover:scale-110 transition-transform drop-shadow-lg" />
+                  <PlayIcon className="w-5 h-5 text-white group-hover:scale-125 transition-all duration-300 drop-shadow-lg animate-pulse" />
                 </div>
                 {video && (
                   <div 
-                    className="absolute inset-0 bg-cover bg-center opacity-60 group-hover:opacity-80 transition-opacity"
+                    className="absolute inset-0 bg-cover bg-center opacity-60 group-hover:opacity-90 transition-opacity duration-500"
                     style={{ backgroundImage: `url(${video.thumbnail})` }}
                   />
                 )}
-                {/* Overlay gradient for better contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                {/* Enhanced overlay with animated gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 group-hover:from-black/50" />
+                
+                {/* Floating particles effect */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-1 h-1 bg-white rounded-full opacity-30"
+                      style={{
+                        left: `${20 + i * 30}%`,
+                        top: `${30 + i * 20}%`,
+                        animationDelay: `${i * 0.5}s`,
+                        animation: 'float 2s ease-in-out infinite alternate'
+                      }}
+                    />
+                  ))}
+                </div>
               </button>
+              
+              {/* Floating indicator */}
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full"></div>
             </div>
           </div>
         )}

@@ -1339,6 +1339,106 @@ body {
   animation: gradient-animated 4s ease infinite;
 }
 
+/* Floating Animation CSS for Trailer Preview */
+@keyframes floatingTrailer {
+  0%, 100% { 
+    transform: translate(0px, 0px) scale(1);
+    filter: drop-shadow(0 0 20px rgba(229, 9, 20, 0.4));
+  }
+  25% { 
+    transform: translate(10px, -8px) scale(1.02);
+    filter: drop-shadow(0 0 30px rgba(229, 9, 20, 0.6));
+  }
+  50% { 
+    transform: translate(20px, 0px) scale(1.05);
+    filter: drop-shadow(0 0 40px rgba(229, 9, 20, 0.8));
+  }
+  75% { 
+    transform: translate(10px, 8px) scale(1.02);
+    filter: drop-shadow(0 0 30px rgba(229, 9, 20, 0.6));
+  }
+}
+
+@keyframes floatingParticle {
+  0%, 100% { 
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.6;
+  }
+  50% { 
+    transform: translate(15px, -10px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes floatingIndicator {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% { 
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+.floating-trailer {
+  animation: floatingTrailer 4s ease-in-out infinite;
+  will-change: transform, filter;
+}
+
+.floating-particle {
+  animation: floatingParticle 3s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.floating-indicator {
+  animation: floatingIndicator 2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Enhanced glow effects for floating elements */
+.floating-glow {
+  position: relative;
+}
+
+.floating-glow::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(45deg, 
+    rgba(229, 9, 20, 0.3), 
+    rgba(255, 69, 0, 0.3), 
+    rgba(229, 9, 20, 0.3)
+  );
+  border-radius: 50%;
+  animation: floatingGlow 3s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes floatingGlow {
+  0%, 100% { 
+    transform: scale(0.9);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+/* Smooth transitions for interactive elements */
+.floating-interactive {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-interactive:hover {
+  transform: scale(1.05) translateY(-2px);
+  filter: drop-shadow(0 0 25px rgba(229, 9, 20, 0.8));
+}
+
 .filter-glow {
   animation: filter-glow 2s ease-in-out infinite;
 }
