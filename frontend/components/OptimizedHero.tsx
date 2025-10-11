@@ -45,8 +45,6 @@ export default function OptimizedHero({ video }: HeroProps) {
   const [showTrailer, setShowTrailer] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageError, setImageError] = useState(false)
-  const [floatingPosition, setFloatingPosition] = useState({ x: 0, y: 0 })
-  const [animationDirection, setAnimationDirection] = useState(1)
   
   // Performance optimization system with error handling
   let metrics, settings, frameRate, isPerformanceGood
@@ -190,11 +188,10 @@ export default function OptimizedHero({ video }: HeroProps) {
             {settings.enableAnimations && !metrics.isMobile ? (
               // Enhanced animated background for high-end devices
               <div 
-                className="absolute inset-0 bg-cover bg-center hw-accelerate optimized-float"
+                className="absolute inset-0 bg-cover bg-center hw-accelerate"
                 style={{ 
                   backgroundImage: `url(${video.thumbnail})`,
-                  transform: 'scale(1.1)',
-                  animationDuration: '20s'
+                  transform: 'scale(1.1)'
                 }}
               />
             ) : (
@@ -358,8 +355,8 @@ export default function OptimizedHero({ video }: HeroProps) {
           >
             <div className={`rounded-lg p-3 border border-white/20 ${
               settings.enableBlur ? 'bg-white/10 backdrop-blur-md' : 'bg-black/80'
-            } shadow-xl hover:border-white/40 transition-all duration-300 max-w-[140px] floating-preview`}>
-              <p className="text-xs text-gray-300 mb-2 text-center animate-pulse">Watch Trailer</p>
+            } shadow-xl hover:border-white/40 transition-all duration-300 max-w-[140px]`}>
+              <p className="text-xs text-gray-300 mb-2 text-center">Watch Trailer</p>
               <button 
                 className="w-28 h-16 bg-gray-700 rounded overflow-hidden relative cursor-pointer hover:bg-gray-600 transition-colors group focus:outline-none focus:ring-2 focus:ring-white/50 mx-auto block hover:scale-105 transform"
                 onClick={() => {
@@ -390,16 +387,14 @@ export default function OptimizedHero({ video }: HeroProps) {
                       style={{
                         left: `${20 + i * 30}%`,
                         top: `${30 + i * 20}%`,
-                        animationDelay: `${i * 0.5}s`,
-                        animation: 'float 2s ease-in-out infinite alternate'
+                        animationDelay: `${i * 0.5}s`
                       }}
                     />
                   ))}
                 </div>
               </button>
               
-              {/* Floating indicator */}
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+              {/* Static indicator - no animation */}
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full"></div>
             </div>
           </div>

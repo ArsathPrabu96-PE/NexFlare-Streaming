@@ -1381,6 +1381,8 @@ body {
   }
 }
 
+/* DISABLED - Floating Animation Classes */
+/*
 .floating-trailer {
   animation: floatingTrailer 4s ease-in-out infinite;
   will-change: transform, filter;
@@ -1395,6 +1397,7 @@ body {
   animation: floatingIndicator 2s ease-in-out infinite;
   will-change: transform, opacity;
 }
+*/
 
 /* Enhanced glow effects for floating elements */
 .floating-glow {
