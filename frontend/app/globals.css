@@ -93,74 +93,74 @@
   animation: ocean-wave 2s ease-in-out infinite;
 }
 
-/* Graphics icons styling */
+/* Graphics icons styling - ANIMATIONS DISABLED */
 .graphics-icon {
   display: inline-block;
   margin: 0 4px;
   font-size: 1.2em;
-  animation: icon-float 2s ease-in-out infinite;
+  /* animation: icon-float 2s ease-in-out infinite; - DISABLED */
 }
 
 .graphics-icon-sparkle {
   color: #ffd700;
-  animation: sparkle-twinkle 1.5s ease-in-out infinite;
+  /* animation: sparkle-twinkle 1.5s ease-in-out infinite; - DISABLED */
   text-shadow: 0 0 10px #ffd700;
   filter: drop-shadow(0 0 15px #ffd700) drop-shadow(0 0 25px #ffa500);
 }
 
 .graphics-icon-fire {
   color: #ff4500;
-  animation: fire-dance 1s ease-in-out infinite alternate;
+  /* animation: fire-dance 1s ease-in-out infinite alternate; - DISABLED */
   text-shadow: 0 0 15px #ff4500;
   filter: drop-shadow(0 0 20px #ff4500) drop-shadow(0 0 30px #dc143c);
 }
 
 .graphics-icon-diamond {
   color: #40e0d0;
-  animation: diamond-shine 2s linear infinite;
+  /* animation: diamond-shine 2s linear infinite; - DISABLED */
   text-shadow: 0 0 20px #40e0d0;
   filter: drop-shadow(0 0 25px #40e0d0) drop-shadow(0 0 35px #00bfff);
 }
 
 .graphics-icon-star {
   color: #ffff00;
-  animation: star-pulse 1.8s ease-in-out infinite;
+  /* animation: star-pulse 1.8s ease-in-out infinite; - DISABLED */
   text-shadow: 0 0 12px #ffff00;
   filter: drop-shadow(0 0 18px #ffff00) drop-shadow(0 0 28px #ffd700);
 }
 
-/* Special mega graphics for section titles */
+/* Special mega graphics for section titles - ANIMATIONS DISABLED */
 .mega-graphics-icon {
   font-size: 3rem;
   display: inline-block;
   margin: 0 8px;
-  animation: mega-icon-dance 3s ease-in-out infinite;
+  /* animation: mega-icon-dance 3s ease-in-out infinite; - DISABLED */
   filter: drop-shadow(0 0 30px currentColor) drop-shadow(0 0 50px currentColor);
 }
 
 .mega-graphics-trending {
   color: #ff4500;
-  animation: mega-fire-explosion 2s ease-in-out infinite;
+  /* animation: mega-fire-explosion 2s ease-in-out infinite; - DISABLED */
 }
 
 .mega-graphics-animation {
   color: #8B5CF6;
-  animation: mega-cinema-roll 4s linear infinite;
+  /* animation: mega-cinema-roll 4s linear infinite; - DISABLED */
 }
 
 .mega-graphics-premium {
   color: #ffd700;
-  animation: mega-crown-glow 2.5s ease-in-out infinite;
+  /* animation: mega-crown-glow 2.5s ease-in-out infinite; - DISABLED */
 }
 
 .mega-graphics-scifi {
   color: #00ff41;
-  animation: mega-rocket-launch 3s ease-in-out infinite;
+  /* animation: mega-rocket-launch 3s ease-in-out infinite; - DISABLED */
 }
 
 .mega-graphics-all {
   color: #ff1493;
-  animation: mega-tv-static 1.5s ease-in-out infinite;
+  /* animation: mega-tv-static 1.5s ease-in-out infinite; - DISABLED */
 }
 
 /* Performance optimizations and reduced motion support */
@@ -187,7 +187,7 @@
   perspective: 1000px;
 }
 
-/* Individual Letter Styling Classes - Optimized for Performance */
+/* Individual Letter Styling Classes - ANIMATIONS DISABLED */
 .letter-style-1 {
   background: linear-gradient(45deg, #ff0080, #ff8c00);
   -webkit-background-clip: text;
@@ -196,7 +196,7 @@
   font-weight: 900;
   display: inline-block;
   will-change: transform;
-  animation: letter-dance-1 3s ease-in-out infinite;
+  /* animation: letter-dance-1 3s ease-in-out infinite; - DISABLED */
   transform: translate3d(0, 0, 0) rotate(-3deg) scale(1.05);
 }
 
@@ -208,7 +208,7 @@
   font-weight: 300;
   display: inline-block;
   will-change: transform;
-  animation: letter-bounce-2 2.5s ease-in-out infinite;
+  /* animation: letter-bounce-2 2.5s ease-in-out infinite; - DISABLED */
   transform: translate3d(0, 0, 0) rotate(2deg) scale(0.95);
 }
 
@@ -220,7 +220,7 @@
   font-weight: 700;
   display: inline-block;
   will-change: transform;
-  animation: letter-pulse-3 2.8s ease-in-out infinite;
+  /* animation: letter-pulse-3 2.8s ease-in-out infinite; - DISABLED */
   transform: translate3d(0, 0, 0) rotate(4deg) scale(1.1);
 }
 
@@ -232,7 +232,7 @@
   font-weight: 800;
   display: inline-block;
   will-change: transform;
-  animation: letter-glow-4 3.2s ease-in-out infinite;
+  /* animation: letter-glow-4 3.2s ease-in-out infinite; - DISABLED */
   transform: translate3d(0, 0, 0) rotate(-2deg) scale(1.03);
 }
 
@@ -244,7 +244,7 @@
   font-weight: 600;
   display: inline-block;
   will-change: transform;
-  animation: letter-fire-5 2.3s ease-in-out infinite;
+  /* animation: letter-fire-5 2.3s ease-in-out infinite; - DISABLED */
   transform: translate3d(0, 0, 0) rotate(3deg) scale(0.98);
 }
 
@@ -256,7 +256,7 @@
   font-weight: 500;
   display: inline-block;
   will-change: transform;
-  animation: letter-wave-6 3.5s ease-in-out infinite;
+  /* animation: letter-wave-6 3.5s ease-in-out infinite; - DISABLED */
   transform: translate3d(0, 0, 0) rotate(-4deg) scale(1.08);
 }
 
@@ -268,7 +268,7 @@
   font-weight: 900;
   display: inline-block;
   will-change: transform;
-  animation: letter-magic-7 2.7s ease-in-out infinite;
+  /* animation: letter-magic-7 2.7s ease-in-out infinite; - DISABLED */
   transform: translate3d(0, 0, 0) rotate(1deg) scale(1.04);
 }
 
