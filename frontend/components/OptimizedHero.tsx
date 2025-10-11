@@ -44,20 +44,66 @@ export default function OptimizedHero({ video }: HeroProps) {
   const [isMuted, setIsMuted] = useState(true)
   const [showTrailer, setShowTrailer] = useState(false)
   
-  // Performance optimization system
-  const { metrics, settings, frameRate, isPerformanceGood } = usePerformanceOptimizer()
+  // Performance optimization system with error handling
+  let metrics, settings, frameRate, isPerformanceGood
+  
+  try {
+    const optimizerResult = usePerformanceOptimizer()
+    metrics = optimizerResult.metrics
+    settings = optimizerResult.settings
+    frameRate = optimizerResult.frameRate
+    isPerformanceGood = optimizerResult.isPerformanceGood
+  } catch (error) {
+    console.error('Performance optimizer error:', error)
+    // Fallback values
+    metrics = {
+      devicePixelRatio: 1,
+      hardwareConcurrency: 2,
+      isMobile: false,
+      isLowEnd: false,
+      preferReducedMotion: false,
+      graphicsQuality: 'medium' as const
+    }
+    settings = {
+      enableAnimations: true,
+      enableParticles: false,
+      enableGradients: true,
+      enableBlur: false,
+      enableShadows: false,
+      animationDuration: 300,
+      particleCount: 0,
+      blurRadius: 0
+    }
+    frameRate = 60
+    isPerformanceGood = true
+  }
   
   useEffect(() => {
-    if (settings.enableAnimations) {
-      const timer = setTimeout(() => setShowTrailer(true), 3000)
-      return () => clearTimeout(timer)
+    try {
+      if (settings.enableAnimations) {
+        const timer = setTimeout(() => {
+          setShowTrailer(true)
+        }, 3000)
+        return () => clearTimeout(timer)
+      }
+    } catch (error) {
+      console.error('Error in trailer timer setup:', error)
     }
   }, [settings.enableAnimations])
 
   if (!video) return null
 
-  const performanceClasses = generatePerformanceClasses(settings)
-  const performanceVars = generatePerformanceVars(settings)
+  let performanceClasses = ''
+  let performanceVars = {}
+  
+  try {
+    performanceClasses = generatePerformanceClasses(settings)
+    performanceVars = generatePerformanceVars(settings)
+  } catch (error) {
+    console.error('Performance class generation error:', error)
+    performanceClasses = 'fallback-performance'
+    performanceVars = {}
+  }
 
   return (
     <div 
@@ -235,7 +281,7 @@ export default function OptimizedHero({ video }: HeroProps) {
               settings.enableBlur ? 'bg-white/10 backdrop-blur-md' : 'bg-black/80'
             }`}>
               <p className="text-sm text-gray-300 mb-2">Watch Trailer</p>
-              <div className="w-32 h-18 bg-gray-700 rounded overflow-hidden relative">
+              <div className="w-32 h-18 bg-gray-700 rounded overflow-hidden relative cursor-pointer hover:bg-gray-600 transition-colors">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <PlayIcon className="w-6 h-6 text-white" />
                 </div>
