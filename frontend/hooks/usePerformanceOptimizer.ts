@@ -102,6 +102,29 @@ export const usePerformanceOptimizer = () => {
     })
   }, [])
 
+  // Adjust graphics quality (moved before monitorFrameRate to fix dependency)
+  const adjustGraphicsQuality = useCallback((direction: 'up' | 'down') => {
+    setMetrics(prev => {
+      let newQuality = prev.graphicsQuality
+      
+      if (direction === 'down') {
+        switch (prev.graphicsQuality) {
+          case 'ultra': newQuality = 'high'; break
+          case 'high': newQuality = 'medium'; break
+          case 'medium': newQuality = 'low'; break
+        }
+      } else {
+        switch (prev.graphicsQuality) {
+          case 'low': newQuality = 'medium'; break
+          case 'medium': newQuality = 'high'; break
+          case 'high': newQuality = 'ultra'; break
+        }
+      }
+      
+      return { ...prev, graphicsQuality: newQuality }
+    })
+  }, [])
+
   // Frame rate monitoring with throttling
   const monitorFrameRate = useCallback(() => {
     let lastTime = performance.now()
@@ -150,29 +173,6 @@ export const usePerformanceOptimizer = () => {
       }
     }
   }, [metrics.graphicsQuality, adjustGraphicsQuality])
-
-  // Adjust graphics quality
-  const adjustGraphicsQuality = useCallback((direction: 'up' | 'down') => {
-    setMetrics(prev => {
-      let newQuality = prev.graphicsQuality
-      
-      if (direction === 'down') {
-        switch (prev.graphicsQuality) {
-          case 'ultra': newQuality = 'high'; break
-          case 'high': newQuality = 'medium'; break
-          case 'medium': newQuality = 'low'; break
-        }
-      } else {
-        switch (prev.graphicsQuality) {
-          case 'low': newQuality = 'medium'; break
-          case 'medium': newQuality = 'high'; break
-          case 'high': newQuality = 'ultra'; break
-        }
-      }
-      
-      return { ...prev, graphicsQuality: newQuality }
-    })
-  }, [])
 
   // Update settings based on quality
   const updateGraphicsSettings = useCallback(() => {
