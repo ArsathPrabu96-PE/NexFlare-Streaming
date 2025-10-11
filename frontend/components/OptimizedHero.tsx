@@ -43,6 +43,8 @@ const OptimizedParticles = ({ count, className }: { count: number, className: st
 export default function OptimizedHero({ video }: HeroProps) {
   const [isMuted, setIsMuted] = useState(true)
   const [showTrailer, setShowTrailer] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageError, setImageError] = useState(false)
   
   // Performance optimization system with error handling
   let metrics, settings, frameRate, isPerformanceGood
@@ -77,7 +79,7 @@ export default function OptimizedHero({ video }: HeroProps) {
     frameRate = 60
     isPerformanceGood = true
   }
-  
+
   useEffect(() => {
     try {
       if (settings.enableAnimations) {
@@ -91,7 +93,26 @@ export default function OptimizedHero({ video }: HeroProps) {
     }
   }, [settings.enableAnimations])
 
-  if (!video) return null
+  // Preload image
+  useEffect(() => {
+    if (video?.thumbnail) {
+      const img = new Image()
+      img.onload = () => setImageLoaded(true)
+      img.onerror = () => setImageError(true)
+      img.src = video.thumbnail
+    }
+  }, [video?.thumbnail])
+
+  if (!video) {
+    return (
+      <div className="relative h-screen overflow-hidden bg-gray-900 flex items-center justify-center">
+        <div className="text-white text-center">
+          <h2 className="text-2xl font-bold mb-2">No Video Selected</h2>
+          <p className="text-gray-400">Please select a video to preview</p>
+        </div>
+      </div>
+    )
+  }
 
   let performanceClasses = ''
   let performanceVars = {}
@@ -112,22 +133,47 @@ export default function OptimizedHero({ video }: HeroProps) {
     >
       {/* Adaptive Background System */}
       <div className="absolute inset-0">
-        {settings.enableAnimations && !metrics.isMobile ? (
-          // Enhanced animated background for high-end devices
-          <div 
-            className="absolute inset-0 bg-cover bg-center hw-accelerate optimized-float"
-            style={{ 
-              backgroundImage: `url(${video.thumbnail})`,
-              transform: 'scale(1.1)',
-              animationDuration: '20s'
-            }}
-          />
-        ) : (
-          // Static optimized background
-          <div 
-            className="absolute inset-0 bg-cover bg-center performance-hero"
-            style={{ backgroundImage: `url(${video.thumbnail})` }}
-          />
+        {/* Loading state */}
+        {!imageLoaded && !imageError && (
+          <div className="absolute inset-0 bg-gray-900 flex items-center justify-center">
+            <div className="text-white text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+              <p>Loading {video.title}...</p>
+            </div>
+          </div>
+        )}
+        
+        {/* Error state */}
+        {imageError && (
+          <div className="absolute inset-0 bg-gradient-to-br from-red-900 to-gray-900 flex items-center justify-center">
+            <div className="text-white text-center">
+              <h3 className="text-xl font-bold mb-2">Image Load Error</h3>
+              <p className="text-gray-300">Failed to load {video.title} preview</p>
+            </div>
+          </div>
+        )}
+        
+        {/* Main background when loaded */}
+        {imageLoaded && !imageError && (
+          <>
+            {settings.enableAnimations && !metrics.isMobile ? (
+              // Enhanced animated background for high-end devices
+              <div 
+                className="absolute inset-0 bg-cover bg-center hw-accelerate optimized-float"
+                style={{ 
+                  backgroundImage: `url(${video.thumbnail})`,
+                  transform: 'scale(1.1)',
+                  animationDuration: '20s'
+                }}
+              />
+            ) : (
+              // Static optimized background
+              <div 
+                className="absolute inset-0 bg-cover bg-center performance-hero"
+                style={{ backgroundImage: `url(${video.thumbnail})` }}
+              />
+            )}
+          </>
         )}
       </div>
       
@@ -275,17 +321,33 @@ export default function OptimizedHero({ video }: HeroProps) {
         </div>
         
         {/* Conditional trailer preview for high-end devices only */}
-        {showTrailer && !metrics.isMobile && settings.enableAnimations && (
-          <div className="absolute bottom-8 right-8 optimized-slide">
-            <div className={`rounded-lg p-4 border border-white/20 ${
+        {showTrailer && !metrics.isMobile && settings.enableAnimations && imageLoaded && !imageError && (
+          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 lg:bottom-8 lg:right-8 z-50 optimized-slide">
+            <div className={`rounded-lg p-3 border border-white/20 ${
               settings.enableBlur ? 'bg-white/10 backdrop-blur-md' : 'bg-black/80'
-            }`}>
-              <p className="text-sm text-gray-300 mb-2">Watch Trailer</p>
-              <div className="w-32 h-18 bg-gray-700 rounded overflow-hidden relative cursor-pointer hover:bg-gray-600 transition-colors">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <PlayIcon className="w-6 h-6 text-white" />
+            } shadow-xl hover:border-white/40 transition-all duration-300 max-w-[140px]`}>
+              <p className="text-xs text-gray-300 mb-2 text-center">Watch Trailer</p>
+              <button 
+                className="w-28 h-16 bg-gray-700 rounded overflow-hidden relative cursor-pointer hover:bg-gray-600 transition-colors group focus:outline-none focus:ring-2 focus:ring-white/50 mx-auto block"
+                onClick={() => {
+                  console.log(`Playing trailer for ${video.title}`)
+                  // Here you could open a modal with the video player or navigate to a trailer page
+                  alert(`Trailer for "${video.title}" would play here!`)
+                }}
+                aria-label={`Watch ${video.title} trailer`}
+              >
+                <div className="absolute inset-0 flex items-center justify-center z-10">
+                  <PlayIcon className="w-5 h-5 text-white group-hover:scale-110 transition-transform drop-shadow-lg" />
                 </div>
-              </div>
+                {video && (
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center opacity-60 group-hover:opacity-80 transition-opacity"
+                    style={{ backgroundImage: `url(${video.thumbnail})` }}
+                  />
+                )}
+                {/* Overlay gradient for better contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              </button>
             </div>
           </div>
         )}
