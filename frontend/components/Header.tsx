@@ -42,6 +42,10 @@ export default function Header() {
               <span className="graphics-icon graphics-icon-diamond">💎</span>
               Browse
             </Link>
+            <Link href="/live" className="text-primary hover:text-red-400 font-bold text-lg transition-all duration-300 text-glow-hover flex items-center">
+              <span className="graphics-icon graphics-icon-live">📡</span>
+              Live
+            </Link>
             <Link href="/my-list" className="text-fire hover:text-metallic-silver font-bold text-lg transition-all duration-300 text-glow-hover flex items-center">
               <span className="graphics-icon graphics-icon-fire">🎬</span>
               My List
@@ -133,6 +137,14 @@ export default function Header() {
             >
               <span className="graphics-icon graphics-icon-diamond mr-2">💎</span>
               Browse
+            </Link>
+            <Link 
+              href="/live" 
+              className="block px-4 py-3 text-primary hover:text-red-400 font-bold text-lg transition-all duration-300 hover:bg-surface/50 rounded-lg flex items-center"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="graphics-icon graphics-icon-live mr-2">📡</span>
+              Live
             </Link>
             <Link 
               href="/my-list" 

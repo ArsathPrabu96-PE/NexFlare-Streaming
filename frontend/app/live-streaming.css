@@ -1,0 +1,217 @@
+/* Live Streaming Enhancements CSS */
+
+/* Live badge animations */
+.live-badge {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(45deg, #dc2626, #ef4444);
+  animation: live-glow 2s ease-in-out infinite alternate;
+}
+
+.live-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: live-shine 3s ease-in-out infinite;
+}
+
+@keyframes live-glow {
+  0% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); }
+  100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.8); }
+}
+
+@keyframes live-shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Live viewer count animation */
+.live-viewers {
+  animation: viewer-pulse 4s ease-in-out infinite;
+}
+
+@keyframes viewer-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Live stream quality indicator */
+.stream-quality {
+  position: relative;
+  background: linear-gradient(135deg, #059669, #10b981);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: quality-flash 3s ease-in-out infinite;
+}
+
+@keyframes quality-flash {
+  0%, 90%, 100% { opacity: 1; }
+  95% { opacity: 0.7; }
+}
+
+/* Live connection status indicators */
+.connection-excellent { color: #10b981; }
+.connection-good { color: #f59e0b; }
+.connection-poor { color: #ef4444; }
+
+.connection-indicator {
+  animation: signal-strength 2s ease-in-out infinite;
+}
+
+@keyframes signal-strength {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Live progress bar for TV shows */
+.live-progress {
+  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+  height: 3px;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  animation: progress-shimmer 2s ease-in-out infinite;
+}
+
+.live-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: progress-shine 3s ease-in-out infinite;
+}
+
+@keyframes progress-shimmer {
+  0%, 100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+  50% { box-shadow: 0 0 10px rgba(59, 130, 246, 0.8); }
+}
+
+@keyframes progress-shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* Live card hover effects */
+.live-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+}
+
+.live-card:hover {
+  border-color: rgba(220, 38, 38, 0.5);
+  box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
+  transform: translateY(-5px) scale(1.02);
+}
+
+/* Live streaming section header */
+.live-section-header {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(239, 68, 68, 0.05));
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.live-section-header h2 {
+  background: linear-gradient(135deg, #dc2626, #ef4444, #f87171);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes text-glow {
+  0% { filter: drop-shadow(0 0 5px rgba(220, 38, 38, 0.3)); }
+  100% { filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.6)); }
+}
+
+/* Channel number styling */
+.channel-number {
+  background: linear-gradient(135deg, #1f2937, #374151);
+  border: 2px solid #4b5563;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 1px;
+  animation: channel-glow 4s ease-in-out infinite;
+}
+
+@keyframes channel-glow {
+  0%, 100% { border-color: #4b5563; }
+  50% { border-color: #6b7280; }
+}
+
+/* Live streaming grid layout enhancements */
+.live-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .live-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  
+  .live-card {
+    border-radius: 12px;
+  }
+  
+  .live-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}
+
+/* Performance optimizations for live elements */
+.live-optimized {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Disable heavy animations on low-end devices */
+@media (prefers-reduced-motion: reduce) {
+  .live-badge,
+  .live-viewers,
+  .stream-quality,
+  .connection-indicator,
+  .live-progress,
+  .live-section-header h2,
+  .channel-number {
+    animation: none;
+  }
+  
+  .live-card:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .live-badge {
+    background: #000;
+    color: #fff;
+    border: 2px solid #fff;
+  }
+  
+  .live-card {
+    border: 2px solid #fff;
+  }
+  
+  .live-section-header {
+    border: 2px solid #fff;
+    background: #000;
+  }
+}

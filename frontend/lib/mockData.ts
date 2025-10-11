@@ -11,7 +11,8 @@ export const mockVideos = [
     releaseYear: 2008,
     views: 1250000,
     likes: 45000,
-    isPremium: false
+    isPremium: false,
+    isLive: false
   },
   {
     _id: '2',
@@ -25,7 +26,8 @@ export const mockVideos = [
     releaseYear: 2006,
     views: 890000,
     likes: 32000,
-    isPremium: true
+    isPremium: true,
+    isLive: false
   },
   {
     _id: '3',
@@ -39,7 +41,8 @@ export const mockVideos = [
     releaseYear: 2013,
     views: 2100000,
     likes: 78000,
-    isPremium: false
+    isPremium: false,
+    isLive: false
   },
   {
     _id: '4',
@@ -53,7 +56,8 @@ export const mockVideos = [
     releaseYear: 2013,
     views: 1800000,
     likes: 65000,
-    isPremium: true
+    isPremium: true,
+    isLive: false
   },
   {
     _id: '5',
@@ -67,7 +71,8 @@ export const mockVideos = [
     releaseYear: 2013,
     views: 1500000,
     likes: 55000,
-    isPremium: false
+    isPremium: false,
+    isLive: false
   },
   {
     _id: '6',
@@ -81,7 +86,8 @@ export const mockVideos = [
     releaseYear: 2013,
     views: 1200000,
     likes: 42000,
-    isPremium: true
+    isPremium: true,
+    isLive: false
   },
   {
     _id: '7',
@@ -95,7 +101,8 @@ export const mockVideos = [
     releaseYear: 2010,
     views: 3200000,
     likes: 125000,
-    isPremium: true
+    isPremium: true,
+    isLive: false
   },
   {
     _id: '8',
@@ -109,7 +116,8 @@ export const mockVideos = [
     releaseYear: 2015,
     views: 980000,
     likes: 35000,
-    isPremium: false
+    isPremium: false,
+    isLive: false
   },
   {
     _id: '9',
@@ -123,7 +131,8 @@ export const mockVideos = [
     releaseYear: 2012,
     views: 2800000,
     likes: 98000,
-    isPremium: true
+    isPremium: true,
+    isLive: false
   },
   {
     _id: '10',
@@ -137,7 +146,280 @@ export const mockVideos = [
     releaseYear: 2013,
     views: 1100000,
     likes: 48000,
-    isPremium: false
+    isPremium: false,
+    isLive: false
+  }
+];
+
+// Live Videos Data
+export const mockLiveVideos = [
+  {
+    _id: 'live-1',
+    title: 'NexFlare Sports Center - Live Football',
+    description: 'Live coverage of today\'s biggest football match with expert commentary and real-time analysis.',
+    thumbnail: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500&h=280&fit=crop',
+    videoUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8', // HLS stream
+    category: 'Sports',
+    rating: 'PG',
+    views: 45892,
+    likes: 3420,
+    isPremium: true,
+    isLive: true,
+    liveViewers: 45892,
+    streamStartTime: new Date(Date.now() - 2 * 60 * 60 * 1000), // Started 2 hours ago
+    streamLanguage: 'English',
+    streamQuality: ['1080p', '720p', '480p']
+  },
+  {
+    _id: 'live-2',
+    title: 'Breaking News Live - Global Updates',
+    description: 'Stay informed with live breaking news coverage from around the world, 24/7.',
+    thumbnail: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=500&h=280&fit=crop',
+    videoUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'News',
+    rating: 'G',
+    views: 23156,
+    likes: 1250,
+    isPremium: false,
+    isLive: true,
+    liveViewers: 23156,
+    streamStartTime: new Date(Date.now() - 6 * 60 * 60 * 1000), // Started 6 hours ago
+    streamLanguage: 'English',
+    streamQuality: ['720p', '480p']
+  },
+  {
+    _id: 'live-3',
+    title: 'Live Music Concert - Electronic Beats',
+    description: 'Experience the hottest electronic music concert live from Amsterdam with world-class DJs.',
+    thumbnail: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&h=280&fit=crop',
+    videoUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'Music',
+    rating: 'PG-13',
+    views: 67234,
+    likes: 8945,
+    isPremium: true,
+    isLive: true,
+    liveViewers: 67234,
+    streamStartTime: new Date(Date.now() - 1 * 60 * 60 * 1000), // Started 1 hour ago
+    streamLanguage: 'Multi-Language',
+    streamQuality: ['1080p', '720p', '480p']
+  },
+  {
+    _id: 'live-4',
+    title: 'Gaming Tournament - Esports Championship',
+    description: 'Live coverage of the biggest esports tournament with professional gamers competing for the championship.',
+    thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500&h=280&fit=crop',
+    videoUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'Gaming',
+    rating: 'T',
+    views: 89432,
+    likes: 12678,
+    isPremium: true,
+    isLive: true,
+    liveViewers: 89432,
+    streamStartTime: new Date(Date.now() - 30 * 60 * 1000), // Started 30 minutes ago
+    streamLanguage: 'English',
+    streamQuality: ['1080p', '720p', '480p']
+  },
+  {
+    _id: 'live-5',
+    title: 'Cooking Masterclass Live',
+    description: 'Learn from world-renowned chefs in this interactive live cooking masterclass.',
+    thumbnail: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&h=280&fit=crop',
+    videoUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'Lifestyle',
+    rating: 'G',
+    views: 15678,
+    likes: 2345,
+    isPremium: false,
+    isLive: true,
+    liveViewers: 15678,
+    streamStartTime: new Date(Date.now() - 45 * 60 * 1000), // Started 45 minutes ago
+    streamLanguage: 'English',
+    streamQuality: ['720p', '480p']
+  },
+  {
+    _id: 'live-6',
+    title: 'Nature Documentary Live - Wildlife Safari',
+    description: 'Join us for a live wildlife safari adventure from the African savanna with real-time animal spotting.',
+    thumbnail: 'https://images.unsplash.com/photo-1534809027769-b00d750a6bac?w=500&h=280&fit=crop',
+    videoUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'Documentary',
+    rating: 'G',
+    views: 32890,
+    likes: 4567,
+    isPremium: true,
+    isLive: true,
+    liveViewers: 32890,
+    streamStartTime: new Date(Date.now() - 3 * 60 * 60 * 1000), // Started 3 hours ago
+    streamLanguage: 'English',
+    streamQuality: ['1080p', '720p', '480p']
+  }
+];
+
+// Live TV Channels Data
+export const mockLiveTVChannels = [
+  {
+    _id: 'tv-1',
+    name: 'NexFlare Sports HD',
+    description: 'Premium sports channel with live coverage of major sporting events',
+    logo: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=100&h=100&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500&h=280&fit=crop',
+    streamUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'Sports',
+    isPremium: true,
+    isLive: true,
+    currentProgram: {
+      title: 'Premier League Live',
+      description: 'Manchester United vs Liverpool - Live Coverage',
+      startTime: new Date(Date.now() - 90 * 60 * 1000), // Started 90 minutes ago
+      endTime: new Date(Date.now() + 30 * 60 * 1000), // Ends in 30 minutes
+      rating: 'PG'
+    },
+    upcomingProgram: {
+      title: 'Sports Center Highlights',
+      description: 'Best moments from today\'s matches',
+      startTime: new Date(Date.now() + 30 * 60 * 1000),
+      endTime: new Date(Date.now() + 90 * 60 * 1000),
+      rating: 'G'
+    },
+    liveViewers: 156789,
+    channelNumber: 101
+  },
+  {
+    _id: 'tv-2',
+    name: 'NexFlare News 24/7',
+    description: 'Breaking news and current affairs coverage around the clock',
+    logo: 'https://images.unsplash.com/photo-1586511925558-a4c6376fe65f?w=100&h=100&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1586511925558-a4c6376fe65f?w=500&h=280&fit=crop',
+    streamUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'News',
+    isPremium: false,
+    isLive: true,
+    currentProgram: {
+      title: 'Global News Update',
+      description: 'Latest news from around the world',
+      startTime: new Date(Date.now() - 30 * 60 * 1000),
+      endTime: new Date(Date.now() + 30 * 60 * 1000),
+      rating: 'G'
+    },
+    upcomingProgram: {
+      title: 'Weather Report',
+      description: 'Today\'s weather forecast and updates',
+      startTime: new Date(Date.now() + 30 * 60 * 1000),
+      endTime: new Date(Date.now() + 45 * 60 * 1000),
+      rating: 'G'
+    },
+    liveViewers: 89234,
+    channelNumber: 102
+  },
+  {
+    _id: 'tv-3',
+    name: 'NexFlare Entertainment',
+    description: 'Latest movies, series, and entertainment content',
+    logo: 'https://images.unsplash.com/photo-1489599511188-c24ca70af613?w=100&h=100&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1489599511188-c24ca70af613?w=500&h=280&fit=crop',
+    streamUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'Entertainment',
+    isPremium: true,
+    isLive: true,
+    currentProgram: {
+      title: 'Blockbuster Movie Night',
+      description: 'Action-packed thriller movie premiere',
+      startTime: new Date(Date.now() - 60 * 60 * 1000),
+      endTime: new Date(Date.now() + 60 * 60 * 1000),
+      rating: 'PG-13'
+    },
+    upcomingProgram: {
+      title: 'Late Night Comedy Show',
+      description: 'Hilarious comedy sketches and interviews',
+      startTime: new Date(Date.now() + 60 * 60 * 1000),
+      endTime: new Date(Date.now() + 120 * 60 * 1000),
+      rating: 'PG'
+    },
+    liveViewers: 234567,
+    channelNumber: 103
+  },
+  {
+    _id: 'tv-4',
+    name: 'NexFlare Music TV',
+    description: 'Non-stop music videos, concerts, and music shows',
+    logo: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=100&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&h=280&fit=crop',
+    streamUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'Music',
+    isPremium: false,
+    isLive: true,
+    currentProgram: {
+      title: 'Top 40 Music Videos',
+      description: 'Latest and greatest music videos',
+      startTime: new Date(Date.now() - 120 * 60 * 1000),
+      endTime: new Date(Date.now() + 60 * 60 * 1000),
+      rating: 'PG'
+    },
+    upcomingProgram: {
+      title: 'Live Concert Special',
+      description: 'Exclusive live performance from top artists',
+      startTime: new Date(Date.now() + 60 * 60 * 1000),
+      endTime: new Date(Date.now() + 180 * 60 * 1000),
+      rating: 'PG-13'
+    },
+    liveViewers: 145678,
+    channelNumber: 104
+  },
+  {
+    _id: 'tv-5',
+    name: 'NexFlare Kids',
+    description: 'Safe, educational, and fun content for children',
+    logo: 'https://images.unsplash.com/photo-1558618644-fced4fc3cd0c?w=100&h=100&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1558618644-fced4fc3cd0c?w=500&h=280&fit=crop',
+    streamUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'Kids',
+    isPremium: false,
+    isLive: true,
+    currentProgram: {
+      title: 'Educational Adventures',
+      description: 'Learning made fun with animated characters',
+      startTime: new Date(Date.now() - 30 * 60 * 1000),
+      endTime: new Date(Date.now() + 30 * 60 * 1000),
+      rating: 'G'
+    },
+    upcomingProgram: {
+      title: 'Cartoon Time',
+      description: 'Classic and new animated series for kids',
+      startTime: new Date(Date.now() + 30 * 60 * 1000),
+      endTime: new Date(Date.now() + 90 * 60 * 1000),
+      rating: 'G'
+    },
+    liveViewers: 67890,
+    channelNumber: 105
+  },
+  {
+    _id: 'tv-6',
+    name: 'NexFlare Documentary',
+    description: 'Fascinating documentaries about nature, history, and science',
+    logo: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=100&h=100&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=500&h=280&fit=crop',
+    streamUrl: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    category: 'Documentary',
+    isPremium: true,
+    isLive: true,
+    currentProgram: {
+      title: 'Mysteries of the Ocean',
+      description: 'Exploring the depths of our blue planet',
+      startTime: new Date(Date.now() - 45 * 60 * 1000),
+      endTime: new Date(Date.now() + 45 * 60 * 1000),
+      rating: 'G'
+    },
+    upcomingProgram: {
+      title: 'Ancient Civilizations',
+      description: 'Uncovering secrets of lost civilizations',
+      startTime: new Date(Date.now() + 45 * 60 * 1000),
+      endTime: new Date(Date.now() + 135 * 60 * 1000),
+      rating: 'PG'
+    },
+    liveViewers: 45123,
+    channelNumber: 106
   }
 ];
 
@@ -155,4 +437,46 @@ export const getPremiumVideos = () => {
 
 export const getFreeVideos = () => {
   return mockVideos.filter(video => !video.isPremium);
+};
+
+export const getLiveVideos = () => {
+  return mockLiveVideos.filter(video => video.isLive);
+};
+
+export const getLiveTVChannels = () => {
+  return mockLiveTVChannels;
+};
+
+export const getLiveTVByCategory = (category: string) => {
+  return mockLiveTVChannels.filter(channel => channel.category.toLowerCase() === category.toLowerCase());
+};
+
+export const getTrendingLiveVideos = () => {
+  return mockLiveVideos.sort((a, b) => (b.liveViewers || 0) - (a.liveViewers || 0)).slice(0, 4);
+};
+
+export const getCurrentlyAiring = () => {
+  const now = new Date();
+  return mockLiveTVChannels.filter(channel => {
+    const program = channel.currentProgram;
+    return program && program.startTime <= now && program.endTime >= now;
+  });
+};
+
+export const getUpcomingShows = () => {
+  const now = new Date();
+  const upcoming = [];
+  
+  mockLiveTVChannels.forEach(channel => {
+    if (channel.upcomingProgram && channel.upcomingProgram.startTime > now) {
+      upcoming.push({
+        ...channel.upcomingProgram,
+        channelName: channel.name,
+        channelId: channel._id,
+        channelNumber: channel.channelNumber
+      });
+    }
+  });
+  
+  return upcoming.sort((a, b) => a.startTime.getTime() - b.startTime.getTime()).slice(0, 10);
 };

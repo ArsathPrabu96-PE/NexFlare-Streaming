@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import './mobile-optimizations.css'
 import './performance-graphics.css'
+import './mobile-video-player.css'
+import './live-streaming.css'
 import { Providers } from './providers'
 import MobileNavigationFix from '../components/MobileNavigationFix'
 

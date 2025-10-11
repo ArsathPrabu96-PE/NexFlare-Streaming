@@ -1,26 +1,38 @@
-'use client'
-
 import React, { useState, useRef, useEffect } from 'react'
-import { PlayIcon, PauseIcon, SpeakerWaveIcon, SpeakerXMarkIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { PlayIcon, PauseIcon, SpeakerWaveIcon, SpeakerXMarkIcon, XMarkIcon, UserGroupIcon, SignalIcon } from '@heroicons/react/24/solid'
 
-interface VideoPlayerProps {
+interface LiveVideoPlayerProps {
   src: string
   poster?: string
   title?: string
   onClose: () => void
+  isLive?: boolean
+  liveViewers?: number
+  streamQuality?: string[]
+  streamLanguage?: string
 }
 
-export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayerProps) {
+export default function LiveVideoPlayer({ 
+  src, 
+  poster, 
+  title, 
+  onClose, 
+  isLive = false, 
+  liveViewers = 0,
+  streamQuality = ['720p'],
+  streamLanguage = 'English'
+}: LiveVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showControls, setShowControls] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
+  const [selectedQuality, setSelectedQuality] = useState(streamQuality[0])
+  const [showQualityMenu, setShowQualityMenu] = useState(false)
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'buffering' | 'disconnected'>('connected')
 
   // Detect mobile device
   useEffect(() => {
@@ -53,6 +65,19 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
     return () => clearTimeout(timeoutId)
   }, [isPlaying, isMobile])
 
+  // Simulate live connection status for demo
+  useEffect(() => {
+    if (!isLive) return
+
+    const interval = setInterval(() => {
+      const statuses: Array<'connected' | 'buffering' | 'disconnected'> = ['connected', 'buffering']
+      const randomStatus = statuses[Math.floor(Math.random() * statuses.length)]
+      setConnectionStatus(randomStatus)
+    }, 10000) // Change status every 10 seconds for demo
+
+    return () => clearInterval(interval)
+  }, [isLive])
+
   const togglePlay = async () => {
     if (!videoRef.current) return
 
@@ -60,7 +85,6 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
       if (isPlaying) {
         videoRef.current.pause()
       } else {
-        // Add mobile-specific play handling
         const playPromise = videoRef.current.play()
         if (playPromise !== undefined) {
           await playPromise
@@ -70,7 +94,7 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
       if (isMobile) setShowControls(true)
     } catch (error) {
       console.error('Video play error:', error)
-      setError('Failed to play video. Please try again.')
+      setError('Failed to play live stream. Please check your connection and try again.')
     }
   }
 
@@ -81,24 +105,13 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
     }
   }
 
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      setCurrentTime(videoRef.current.currentTime)
-    }
-  }
-
   const handleLoadedMetadata = () => {
     if (videoRef.current) {
-      setDuration(videoRef.current.duration)
       setIsLoading(false)
-    }
-  }
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const time = parseFloat(e.target.value)
-    if (videoRef.current) {
-      videoRef.current.currentTime = time
-      setCurrentTime(time)
+      // Auto-play live streams
+      if (isLive) {
+        videoRef.current.play().catch(console.error)
+      }
     }
   }
 
@@ -111,15 +124,20 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
     }
   }
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60)
-    const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`
+  const handleQualityChange = (quality: string) => {
+    setSelectedQuality(quality)
+    setShowQualityMenu(false)
+    // In a real implementation, you would switch the video source here
+    console.log(`Switching to ${quality} quality`)
   }
 
   const handleVideoError = () => {
     setIsLoading(false)
-    setError('Failed to load video. Please check your internet connection and try again.')
+    if (isLive) {
+      setError('Live stream is currently unavailable. Please try again later.')
+    } else {
+      setError('Failed to load video. Please check your internet connection and try again.')
+    }
   }
 
   const handleVideoClick = () => {
@@ -137,6 +155,33 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
       togglePlay()
     } else if (e.code === 'Escape') {
       onClose()
+    }
+  }
+
+  const formatViewerCount = (count: number) => {
+    if (count >= 1000000) {
+      return `${(count / 1000000).toFixed(1)}M`
+    } else if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}K`
+    }
+    return count.toString()
+  }
+
+  const getConnectionStatusColor = () => {
+    switch (connectionStatus) {
+      case 'connected': return 'text-green-400'
+      case 'buffering': return 'text-yellow-400'
+      case 'disconnected': return 'text-red-400'
+      default: return 'text-gray-400'
+    }
+  }
+
+  const getConnectionStatusText = () => {
+    switch (connectionStatus) {
+      case 'connected': return 'Live'
+      case 'buffering': return 'Buffering'
+      case 'disconnected': return 'Reconnecting'
+      default: return 'Unknown'
     }
   }
 
@@ -162,7 +207,7 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
         {error && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-20">
             <div className="bg-red-600/90 text-white p-6 rounded-lg max-w-md text-center">
-              <h3 className="font-bold mb-2">Video Error</h3>
+              <h3 className="font-bold mb-2">{isLive ? 'Live Stream Error' : 'Video Error'}</h3>
               <p className="mb-4">{error}</p>
               <button 
                 onClick={onClose}
@@ -180,18 +225,29 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
           src={src}
           poster={poster}
           className="w-full h-full object-contain"
-          onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
           onError={handleVideoError}
           onClick={handleVideoClick}
           preload="metadata"
-          playsInline // Important for mobile Safari
-          webkit-playsinline="true" // Legacy iOS support
-          x5-video-player-type="h5" // For Android WeChat
+          playsInline
+          webkit-playsinline="true"
+          x5-video-player-type="h5"
           x5-video-player-fullscreen="true"
+          autoPlay={isLive}
+          muted={isLive} // Live streams often need to start muted for autoplay
         />
+
+        {/* Live Stream Indicator */}
+        {isLive && (
+          <div className="absolute top-4 left-4 z-30">
+            <div className="flex items-center space-x-2 bg-red-600/90 text-white px-3 py-1 rounded-full text-sm font-semibold">
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+              <span>LIVE</span>
+            </div>
+          </div>
+        )}
 
         {/* Custom Controls Overlay */}
         {showControls && !error && (
@@ -199,9 +255,28 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
             
             {/* Top Controls */}
             <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
-              {title && (
-                <h2 className="text-white font-semibold text-lg truncate mr-4">{title}</h2>
-              )}
+              <div className="flex items-center space-x-4">
+                {title && (
+                  <h2 className="text-white font-semibold text-lg truncate mr-4">{title}</h2>
+                )}
+                
+                {/* Live Viewer Count */}
+                {isLive && liveViewers > 0 && (
+                  <div className="flex items-center space-x-2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                    <UserGroupIcon className="w-4 h-4" />
+                    <span>{formatViewerCount(liveViewers)} watching</span>
+                  </div>
+                )}
+                
+                {/* Connection Status */}
+                {isLive && (
+                  <div className={`flex items-center space-x-2 bg-black/50 px-3 py-1 rounded-full text-sm ${getConnectionStatusColor()}`}>
+                    <SignalIcon className="w-4 h-4" />
+                    <span>{getConnectionStatusText()}</span>
+                  </div>
+                )}
+              </div>
+              
               <button 
                 onClick={onClose}
                 className="text-white hover:text-red-400 transition-colors p-2 bg-black/50 rounded-full hover:bg-black/70"
@@ -224,20 +299,14 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
 
             {/* Bottom Controls */}
             <div className="absolute bottom-4 left-4 right-4">
-              {/* Progress Bar */}
-              <div className="mb-4">
-                <input
-                  type="range"
-                  min="0"
-                  max={duration || 0}
-                  value={currentTime}
-                  onChange={handleSeek}
-                  className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
-                  style={{
-                    background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentTime / duration) * 100}%, #4b5563 ${(currentTime / duration) * 100}%, #4b5563 100%)`
-                  }}
-                />
-              </div>
+              {/* Live streams don't have progress bars */}
+              {!isLive && (
+                <div className="mb-4">
+                  <div className="w-full h-2 bg-gray-600 rounded-lg">
+                    <div className="h-2 bg-primary rounded-lg" style={{ width: '0%' }}></div>
+                  </div>
+                </div>
+              )}
 
               {/* Control Buttons */}
               <div className="flex items-center justify-between">
@@ -277,21 +346,52 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
                     </div>
                   )}
 
-                  {/* Time Display */}
-                  <div className="text-white text-sm">
-                    {formatTime(currentTime)} / {formatTime(duration)}
-                  </div>
+                  {/* Stream Language */}
+                  {isLive && streamLanguage && (
+                    <div className="text-white text-sm bg-black/50 px-2 py-1 rounded">
+                      {streamLanguage}
+                    </div>
+                  )}
                 </div>
 
-                {/* Mobile-specific touch-friendly close button */}
-                {isMobile && (
-                  <button 
-                    onClick={onClose}
-                    className="text-white hover:text-red-400 transition-colors p-3 bg-black/50 rounded-full"
-                  >
-                    <XMarkIcon className="w-6 h-6" />
-                  </button>
-                )}
+                <div className="flex items-center space-x-4">
+                  {/* Quality Selector */}
+                  {streamQuality.length > 1 && (
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowQualityMenu(!showQualityMenu)}
+                        className="text-white hover:text-primary transition-colors bg-black/50 px-3 py-1 rounded text-sm"
+                      >
+                        {selectedQuality}
+                      </button>
+                      {showQualityMenu && (
+                        <div className="absolute bottom-8 right-0 bg-black/90 rounded-lg overflow-hidden">
+                          {streamQuality.map((quality) => (
+                            <button
+                              key={quality}
+                              onClick={() => handleQualityChange(quality)}
+                              className={`block w-full px-4 py-2 text-left text-white hover:bg-primary/50 transition-colors ${
+                                quality === selectedQuality ? 'bg-primary/30' : ''
+                              }`}
+                            >
+                              {quality}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Mobile-specific touch-friendly close button */}
+                  {isMobile && (
+                    <button 
+                      onClick={onClose}
+                      className="text-white hover:text-red-400 transition-colors p-3 bg-black/50 rounded-full"
+                    >
+                      <XMarkIcon className="w-6 h-6" />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -301,7 +401,7 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
       {/* Mobile Instructions */}
       {isMobile && showControls && (
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-white text-sm bg-black/70 px-4 py-2 rounded-lg">
-          Tap screen to toggle controls
+          {isLive ? 'Tap screen to toggle controls' : 'Tap screen to toggle controls'}
         </div>
       )}
     </div>

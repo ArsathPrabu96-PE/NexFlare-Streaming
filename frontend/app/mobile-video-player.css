@@ -1,0 +1,257 @@
+/* Mobile Video Player Optimizations */
+
+/* Enhanced video element styling for mobile */
+.mobile-video-player {
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: contain;
+  background: #000;
+}
+
+/* Touch-friendly controls */
+.mobile-video-controls {
+  padding: 16px;
+  min-height: 48px; /* Minimum touch target size */
+}
+
+.mobile-video-controls button {
+  min-width: 48px;
+  min-height: 48px;
+  padding: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+/* Mobile-optimized progress bar */
+.mobile-progress-bar {
+  height: 8px !important;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.mobile-progress-bar::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-progress-bar::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Loading spinner for mobile */
+.mobile-loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: mobile-spin 1s linear infinite;
+}
+
+@keyframes mobile-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error message styling for mobile */
+.mobile-error-dialog {
+  max-width: 90vw;
+  margin: 20px;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Control overlay animations */
+.mobile-controls-fade-in {
+  animation: mobile-fade-in 0.3s ease-out;
+}
+
+.mobile-controls-fade-out {
+  animation: mobile-fade-out 0.3s ease-out;
+}
+
+@keyframes mobile-fade-in {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-fade-out {
+  from { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+/* Prevent text selection on controls */
+.mobile-video-controls * {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Prevent zoom on double tap for video controls */
+.mobile-video-overlay {
+  touch-action: manipulation;
+}
+
+/* Large play button for mobile */
+.mobile-play-button {
+  width: 80px !important;
+  height: 80px !important;
+  background: rgba(59, 130, 246, 0.9);
+  backdrop-filter: blur(10px);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-play-button:active {
+  transform: scale(0.95);
+  background: rgba(59, 130, 246, 1);
+}
+
+/* Instructions text styling */
+.mobile-instructions {
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: mobile-pulse 2s infinite;
+}
+
+@keyframes mobile-pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* Responsive breakpoints for mobile video */
+@media (max-width: 768px) {
+  .video-player-mobile {
+    padding: 0;
+    margin: 0;
+  }
+  
+  .video-controls-mobile .text-sm {
+    font-size: 12px;
+  }
+  
+  .video-controls-mobile .space-x-4 > * + * {
+    margin-left: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-play-button {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  .mobile-instructions {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-appearance: none) {
+  video::-webkit-media-controls {
+    display: none !important;
+  }
+  
+  video::-webkit-media-controls-panel {
+    display: none !important;
+  }
+  
+  video::-webkit-media-controls-play-button {
+    display: none !important;
+  }
+  
+  video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+  }
+}
+
+/* Android Chrome specific optimizations */
+@media screen and (max-width: 768px) {
+  video[x5-video-player-type="h5"] {
+    object-position: center;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .mobile-progress-bar::-webkit-slider-thumb {
+    transform: scale(0.8);
+  }
+  
+  .mobile-play-button {
+    border-width: 2px;
+  }
+}
+
+/* Landscape orientation optimizations */
+@media (max-height: 500px) and (orientation: landscape) {
+  .mobile-instructions {
+    bottom: 60px;
+    font-size: 12px;
+  }
+  
+  .video-controls-mobile {
+    padding: 8px 16px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .mobile-error-dialog {
+    background: rgba(17, 24, 39, 0.95);
+    border: 1px solid rgba(75, 85, 99, 0.5);
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-play-button {
+    transition: none;
+  }
+  
+  .mobile-controls-fade-in,
+  .mobile-controls-fade-out {
+    animation: none;
+  }
+  
+  .mobile-instructions {
+    animation: none;
+  }
+}

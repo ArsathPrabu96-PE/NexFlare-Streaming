@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Test</title>
+</head>
+<body>
+    <h1>CORS Test for NexFlare Backend</h1>
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <button onclick="testCORS()">Test CORS Preflight</button>
+    <div id="results"></div>
+
+    <script>
+        async function testHealth() {
+            const resultsDiv = document.getElementById('results');
+            try {
+                const response = await fetch('https://nexflare-backend.onrender.com/api/health');
+                const data = await response.json();
+                resultsDiv.innerHTML = '<h3>Health Test Result:</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                resultsDiv.innerHTML = '<h3>Health Test Error:</h3><pre>' + error.message + '</pre>';
+            }
+        }
+
+        async function testCORS() {
+            const resultsDiv = document.getElementById('results');
+            try {
+                const response = await fetch('https://nexflare-backend.onrender.com/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: 'Test User',
+                        email: 'test@example.com',
+                        password: 'testpassword123'
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultsDiv.innerHTML = '<h3>CORS Test Success:</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                } else {
+                    const errorData = await response.text();
+                    resultsDiv.innerHTML = '<h3>CORS Test Response Error:</h3><pre>' + errorData + '</pre>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = '<h3>CORS Test Error:</h3><pre>' + error.message + '</pre>';
+            }
+        }
+    </script>
+</body>
+</html>

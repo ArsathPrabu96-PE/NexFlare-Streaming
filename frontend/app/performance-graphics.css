@@ -45,6 +45,29 @@
   box-shadow: none !important;
 }
 
+/* Graphics Icons */
+.graphics-icon {
+  display: inline-block;
+  font-size: 1em;
+  animation: graphics-float 3s ease-in-out infinite;
+}
+
+.graphics-icon-live {
+  animation: live-pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.5));
+}
+
+@keyframes live-pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.5));
+  }
+  50% { 
+    transform: scale(1.1); 
+    filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.8));
+  }
+}
+
 /* Optimized animation keyframes - using transform only */
 @keyframes optimized-float {
   0%, 100% { transform: translateY(0px); }
