@@ -28,15 +28,32 @@ export default function AnimatedButton({
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled || loading) return
 
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const id = Date.now()
+    // Store event data before async operation
+    const clientX = e.clientX
+    const clientY = e.clientY
+    const currentTarget = e.currentTarget
 
-    setRipples(prev => [...prev, { x, y, id }])
-    setTimeout(() => {
-      setRipples(prev => prev.filter(ripple => ripple.id !== id))
-    }, 600)
+    // Batch the DOM read in the next frame to prevent forced reflow
+    requestAnimationFrame(() => {
+      try {
+        // Check if element still exists in DOM
+        if (!currentTarget || !document.contains(currentTarget)) {
+          return
+        }
+        
+        const rect = currentTarget.getBoundingClientRect()
+        const x = clientX - rect.left
+        const y = clientY - rect.top
+        const id = Date.now()
+
+        setRipples(prev => [...prev, { x, y, id }])
+        setTimeout(() => {
+          setRipples(prev => prev.filter(ripple => ripple.id !== id))
+        }, 600)
+      } catch (error) {
+        console.warn('Ripple effect error:', error)
+      }
+    })
 
     onClick?.()
   }

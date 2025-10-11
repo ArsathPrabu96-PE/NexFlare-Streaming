@@ -53,82 +53,103 @@ export const usePerformanceOptimizer = () => {
   const [frameRate, setFrameRate] = useState<number>(60)
   const [isPerformanceGood, setIsPerformanceGood] = useState<boolean>(true)
 
-  // Performance detection
+  // Performance detection with debouncing
   const detectPerformanceCapabilities = useCallback(() => {
     if (typeof window === 'undefined') return
 
-    const devicePixelRatio = window.devicePixelRatio || 1
-    const hardwareConcurrency = navigator.hardwareConcurrency || 2
-    const memoryInfo = (navigator as any).deviceMemory || (navigator as any).memory
-    const connectionType = (navigator as any).connection?.effectiveType
+    // Use RAF to batch DOM reads and prevent forced reflow
+    requestAnimationFrame(() => {
+      const devicePixelRatio = window.devicePixelRatio || 1
+      const hardwareConcurrency = navigator.hardwareConcurrency || 2
+      const memoryInfo = (navigator as any).deviceMemory || (navigator as any).memory
+      const connectionType = (navigator as any).connection?.effectiveType
 
-    // Mobile detection
-    const isMobile = window.innerWidth <= 768 || 
-      /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      // Mobile detection - cache window.innerWidth to avoid repeated access
+      const windowWidth = window.innerWidth
+      const isMobile = windowWidth <= 768 || 
+        /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
-    // Reduced motion preference
-    const preferReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      // Reduced motion preference
+      const preferReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-    // Low-end device detection
-    const isLowEnd = hardwareConcurrency <= 2 || 
-      (memoryInfo && memoryInfo < 4) || 
-      connectionType === 'slow-2g' || 
-      connectionType === '2g'
+      // Low-end device detection
+      const isLowEnd = hardwareConcurrency <= 2 || 
+        (memoryInfo && memoryInfo < 4) || 
+        connectionType === 'slow-2g' || 
+        connectionType === '2g'
 
-    // Graphics quality determination
-    let graphicsQuality: 'low' | 'medium' | 'high' | 'ultra' = 'medium'
-    
-    if (preferReducedMotion || isLowEnd || isMobile) {
-      graphicsQuality = 'low'
-    } else if (hardwareConcurrency >= 8 && devicePixelRatio >= 2 && !isMobile) {
-      graphicsQuality = 'ultra'
-    } else if (hardwareConcurrency >= 4 && !isMobile) {
-      graphicsQuality = 'high'
-    }
+      // Graphics quality determination
+      let graphicsQuality: 'low' | 'medium' | 'high' | 'ultra' = 'medium'
+      
+      if (preferReducedMotion || isLowEnd || isMobile) {
+        graphicsQuality = 'low'
+      } else if (hardwareConcurrency >= 8 && devicePixelRatio >= 2 && !isMobile) {
+        graphicsQuality = 'ultra'
+      } else if (hardwareConcurrency >= 4 && !isMobile) {
+        graphicsQuality = 'high'
+      }
 
-    setMetrics({
-      devicePixelRatio,
-      hardwareConcurrency,
-      memoryInfo,
-      connectionType,
-      isMobile,
-      isLowEnd,
-      preferReducedMotion,
-      graphicsQuality
+      setMetrics({
+        devicePixelRatio,
+        hardwareConcurrency,
+        memoryInfo,
+        connectionType,
+        isMobile,
+        isLowEnd,
+        preferReducedMotion,
+        graphicsQuality
+      })
     })
   }, [])
 
-  // Frame rate monitoring
+  // Frame rate monitoring with throttling
   const monitorFrameRate = useCallback(() => {
     let lastTime = performance.now()
     let frameCount = 0
     let fps = 60
+    let animationId: number
+    let isMonitoring = true
 
     const measureFPS = () => {
+      if (!isMonitoring) return
+      
       frameCount++
       const currentTime = performance.now()
       
-      if (currentTime - lastTime >= 1000) {
+      // Only update FPS every 2 seconds to reduce overhead
+      if (currentTime - lastTime >= 2000) {
         fps = Math.round((frameCount * 1000) / (currentTime - lastTime))
-        setFrameRate(fps)
-        setIsPerformanceGood(fps >= 30)
         
-        // Auto-adjust quality based on performance
-        if (fps < 20 && metrics.graphicsQuality !== 'low') {
-          adjustGraphicsQuality('down')
-        } else if (fps >= 55 && metrics.graphicsQuality !== 'ultra') {
-          adjustGraphicsQuality('up')
-        }
+        // Batch state updates to prevent excessive re-renders
+        requestAnimationFrame(() => {
+          setFrameRate(fps)
+          setIsPerformanceGood(fps >= 30)
+          
+          // Auto-adjust quality based on performance (less aggressive)
+          if (fps < 15 && metrics.graphicsQuality !== 'low') {
+            adjustGraphicsQuality('down')
+          } else if (fps >= 58 && metrics.graphicsQuality !== 'ultra') {
+            adjustGraphicsQuality('up')
+          }
+        })
         
         frameCount = 0
         lastTime = currentTime
       }
       
-      requestAnimationFrame(measureFPS)
+      animationId = requestAnimationFrame(measureFPS)
     }
 
-    requestAnimationFrame(measureFPS)
-  }, [metrics.graphicsQuality])
+    animationId = requestAnimationFrame(measureFPS)
+    
+    // Return cleanup function
+    return () => {
+      isMonitoring = false
+      if (animationId) {
+        cancelAnimationFrame(animationId)
+      }
+    }
+  }, [metrics.graphicsQuality, adjustGraphicsQuality])
 
   // Adjust graphics quality
   const adjustGraphicsQuality = useCallback((direction: 'up' | 'down') => {
@@ -225,16 +246,26 @@ export const usePerformanceOptimizer = () => {
     setSettings(newSettings)
   }, [metrics.graphicsQuality])
 
-  // Initialize
+  // Initialize with debounced resize handler
   useEffect(() => {
     detectPerformanceCapabilities()
     
+    let resizeTimeout: NodeJS.Timeout
     const handleResize = () => {
-      detectPerformanceCapabilities()
+      // Debounce resize events to prevent excessive reflows
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(() => {
+        detectPerformanceCapabilities()
+      }, 250)
     }
     
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize, { passive: true })
+      return () => {
+        window.removeEventListener('resize', handleResize)
+        clearTimeout(resizeTimeout)
+      }
+    }
   }, [detectPerformanceCapabilities])
 
   useEffect(() => {
@@ -243,10 +274,13 @@ export const usePerformanceOptimizer = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      monitorFrameRate()
-    }, 2000) // Start monitoring after initial load
+      const cleanup = monitorFrameRate()
+      return cleanup
+    }, 3000) // Start monitoring after initial load to avoid affecting startup performance
     
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+    }
   }, [monitorFrameRate])
 
   return {

@@ -34,17 +34,32 @@ export default function LiveVideoPlayer({
   const [showQualityMenu, setShowQualityMenu] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'buffering' | 'disconnected'>('connected')
 
-  // Detect mobile device
+  // Detect mobile device with debouncing
   useEffect(() => {
+    let resizeTimeout: NodeJS.Timeout
+    
     const checkMobile = () => {
-      const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                     window.innerWidth <= 768
-      setIsMobile(mobile)
+      // Debounce resize events and batch DOM reads
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(() => {
+        requestAnimationFrame(() => {
+          const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                         window.innerWidth <= 768
+          setIsMobile(mobile)
+        })
+      }, 150)
     }
     
+    // Initial check
     checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
+    
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', checkMobile, { passive: true })
+      return () => {
+        window.removeEventListener('resize', checkMobile)
+        clearTimeout(resizeTimeout)
+      }
+    }
   }, [])
 
   // Auto-hide controls on mobile
