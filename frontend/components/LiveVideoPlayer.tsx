@@ -149,9 +149,27 @@ export default function LiveVideoPlayer({
   const handleVideoError = () => {
     setIsLoading(false)
     if (isLive) {
-      setError('Live stream is currently unavailable. Please try again later.')
+      setError('Live stream temporarily unavailable. Click retry to reconnect.')
     } else {
       setError('Failed to load video. Please check your internet connection and try again.')
+    }
+  }
+
+  const retryConnection = () => {
+    setError(null)
+    setIsLoading(true)
+    setConnectionStatus('buffering')
+    
+    if (videoRef.current) {
+      // Reset video source to trigger reload
+      const currentSrc = videoRef.current.src
+      videoRef.current.src = ''
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.src = currentSrc
+          videoRef.current.load()
+        }
+      }, 100)
     }
   }
 
@@ -224,12 +242,22 @@ export default function LiveVideoPlayer({
             <div className="bg-red-600/90 text-white p-6 rounded-lg max-w-md text-center">
               <h3 className="font-bold mb-2">{isLive ? 'Live Stream Error' : 'Video Error'}</h3>
               <p className="mb-4">{error}</p>
-              <button 
-                onClick={onClose}
-                className="bg-white text-red-600 px-4 py-2 rounded hover:bg-gray-100 transition-colors"
-              >
-                Close
-              </button>
+              <div className="flex space-x-3 justify-center">
+                {isLive && (
+                  <button 
+                    onClick={retryConnection}
+                    className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80 transition-colors"
+                  >
+                    Retry Connection
+                  </button>
+                )}
+                <button 
+                  onClick={onClose}
+                  className="bg-white text-red-600 px-4 py-2 rounded hover:bg-gray-100 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         )}
