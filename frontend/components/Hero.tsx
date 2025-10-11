@@ -83,7 +83,7 @@ export default function Hero({ video }: HeroProps) {
       
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4 md:px-8 lg:px-16 xl:px-20">
         <div className="w-full max-w-7xl mx-auto">
-          <div className="max-w-5xl animate-in slide-in-from-left duration-1000 space-y-6 md:space-y-8 lg:space-y-10">>
+          <div className="max-w-5xl animate-in slide-in-from-left duration-1000 space-y-6 md:space-y-8 lg:space-y-10">
             {/* Mobile-optimized genre tags */}
             <div className="flex items-center justify-center md:justify-start space-x-2 flex-wrap gap-2">
             <span className="bg-black/60 text-cyan-400 px-3 py-1 rounded-full text-xs md:text-sm font-bold border border-cyan-400/50 shadow-lg flex items-center">
