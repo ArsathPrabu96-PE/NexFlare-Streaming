@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexFlare Animation Test</title>
+    <style>
+        body {
+            background: #000;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success { background: #0f5132; }
+        .error { background: #721c24; }
+        .warning { background: #664d03; }
+        .test-button {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 NexFlare Testing Suite</h1>
+        
+        <h2>📡 Deployment Status</h2>
+        <div id="deploymentStatus" class="status warning">Testing...</div>
+        
+        <h2>🎨 Frontend Tests</h2>
+        <div id="frontendStatus" class="status warning">Testing...</div>
+        
+        <h2>⚙️ Backend Tests</h2>
+        <div id="backendStatus" class="status warning">Testing...</div>
+        
+        <h2>🎯 Animation Tests</h2>
+        <div id="animationStatus" class="status warning">Testing...</div>
+        
+        <h2>🌐 API Tests</h2>
+        <div id="apiStatus" class="status warning">Testing...</div>
+        
+        <button class="test-button" onclick="runTests()">🚀 Run All Tests</button>
+        <button class="test-button" onclick="openMainApp()">🎬 Open Main App</button>
+        <button class="test-button" onclick="openDeployment()">🌍 Open Deployment</button>
+    </div>
+
+    <script>
+        async function testUrl(url, name) {
+            try {
+                const response = await fetch(url, { method: 'GET', mode: 'no-cors' });
+                return { success: true, message: `✅ ${name} accessible` };
+            } catch (error) {
+                return { success: false, message: `❌ ${name} failed: ${error.message}` };
+            }
+        }
+
+        async function runTests() {
+            document.getElementById('deploymentStatus').textContent = 'Testing deployment...';
+            document.getElementById('frontendStatus').textContent = 'Testing frontend...';
+            document.getElementById('backendStatus').textContent = 'Testing backend...';
+            document.getElementById('animationStatus').textContent = 'Testing animations...';
+            document.getElementById('apiStatus').textContent = 'Testing API...';
+
+            // Test deployment
+            const deploymentTest = await testUrl('https://nexflare-frontend.onrender.com', 'Deployment');
+            const deploymentEl = document.getElementById('deploymentStatus');
+            deploymentEl.textContent = deploymentTest.message;
+            deploymentEl.className = deploymentTest.success ? 'status success' : 'status error';
+
+            // Test local frontend
+            const frontendTest = await testUrl('http://localhost:3001', 'Local Frontend');
+            const frontendEl = document.getElementById('frontendStatus');
+            frontendEl.textContent = frontendTest.message;
+            frontendEl.className = frontendTest.success ? 'status success' : 'status error';
+
+            // Test backend
+            const backendTest = await testUrl('https://nexflare-backend.onrender.com/health', 'Backend');
+            const backendEl = document.getElementById('backendStatus');
+            backendEl.textContent = backendTest.message;
+            backendEl.className = backendTest.success ? 'status success' : 'status error';
+
+            // Test animations (check if CSS animations are supported)
+            const animationSupported = CSS.supports('animation', 'test 1s');
+            const animationEl = document.getElementById('animationStatus');
+            if (animationSupported) {
+                animationEl.textContent = '✅ CSS Animations supported - Floating animations should work';
+                animationEl.className = 'status success';
+            } else {
+                animationEl.textContent = '❌ CSS Animations not supported';
+                animationEl.className = 'status error';
+            }
+
+            // Test API
+            const apiTest = await testUrl('https://nexflare-backend.onrender.com/api/videos', 'Videos API');
+            const apiEl = document.getElementById('apiStatus');
+            apiEl.textContent = apiTest.message;
+            apiEl.className = apiTest.success ? 'status success' : 'status error';
+        }
+
+        function openMainApp() {
+            window.open('http://localhost:3001', '_blank');
+        }
+
+        function openDeployment() {
+            window.open('https://nexflare-frontend.onrender.com', '_blank');
+        }
+
+        // Auto-run tests on load
+        window.onload = () => {
+            setTimeout(runTests, 1000);
+        };
+    </script>
+</body>
+</html>

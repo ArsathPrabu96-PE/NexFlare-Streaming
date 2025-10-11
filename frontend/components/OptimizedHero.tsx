@@ -105,34 +105,34 @@ export default function OptimizedHero({ video }: HeroProps) {
     }
   }, [video?.thumbnail])
 
-  // Floating animation for trailer preview
-  useEffect(() => {
-    if (!showTrailer || metrics.isMobile || !settings.enableAnimations) return
+  // Floating animation for trailer preview - DISABLED
+  // useEffect(() => {
+  //   if (!showTrailer || metrics.isMobile || !settings.enableAnimations) return
 
-    const floatingAnimation = () => {
-      setFloatingPosition(prev => {
-        const maxX = 20 // Maximum horizontal movement in pixels
-        const maxY = 15 // Maximum vertical movement in pixels
+  //   const floatingAnimation = () => {
+  //     setFloatingPosition(prev => {
+  //       const maxX = 20 // Maximum horizontal movement in pixels
+  //       const maxY = 15 // Maximum vertical movement in pixels
         
-        let newX = prev.x + (animationDirection * 0.5)
-        let newY = prev.y + (Math.sin(Date.now() * 0.001) * 0.3)
+  //       let newX = prev.x + (animationDirection * 0.5)
+  //       let newY = prev.y + (Math.sin(Date.now() * 0.001) * 0.3)
         
-        // Bounce effect when reaching boundaries
-        if (newX >= maxX || newX <= -maxX) {
-          setAnimationDirection(prev => prev * -1)
-          newX = Math.max(-maxX, Math.min(maxX, newX))
-        }
+  //       // Bounce effect when reaching boundaries
+  //       if (newX >= maxX || newX <= -maxX) {
+  //         setAnimationDirection(prev => prev * -1)
+  //         newX = Math.max(-maxX, Math.min(maxX, newX))
+  //       }
         
-        newY = Math.max(-maxY, Math.min(maxY, newY))
+  //       newY = Math.max(-maxY, Math.min(maxY, newY))
         
-        return { x: newX, y: newY }
-      })
-    }
+  //       return { x: newX, y: newY }
+  //     })
+  //   }
 
-    const intervalId = setInterval(floatingAnimation, 50) // Smooth 20fps animation
+  //   const intervalId = setInterval(floatingAnimation, 50) // Smooth 20fps animation
     
-    return () => clearInterval(intervalId)
-  }, [showTrailer, metrics.isMobile, settings.enableAnimations, animationDirection])
+  //   return () => clearInterval(intervalId)
+  // }, [showTrailer, metrics.isMobile, settings.enableAnimations, animationDirection])
 
   if (!video) {
     return (
@@ -351,14 +351,10 @@ export default function OptimizedHero({ video }: HeroProps) {
           </div>
         </div>
         
-        {/* Conditional trailer preview for high-end devices with floating animation */}
+        {/* Conditional trailer preview for high-end devices - STATIC POSITION */}
         {showTrailer && !metrics.isMobile && settings.enableAnimations && imageLoaded && !imageError && (
           <div 
             className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 lg:bottom-8 lg:right-8 z-50 optimized-slide"
-            style={{
-              transform: `translate(${floatingPosition.x}px, ${floatingPosition.y}px)`,
-              transition: 'transform 0.1s ease-out'
-            }}
           >
             <div className={`rounded-lg p-3 border border-white/20 ${
               settings.enableBlur ? 'bg-white/10 backdrop-blur-md' : 'bg-black/80'
@@ -372,13 +368,6 @@ export default function OptimizedHero({ video }: HeroProps) {
                   alert(`🎬 Opening trailer for "${video.title}"!\n\nFeatures:\n• Full HD Quality\n• Surround Sound\n• Interactive Controls`)
                 }}
                 aria-label={`Watch ${video.title} trailer`}
-                onMouseEnter={() => {
-                  // Add subtle hover animation boost
-                  setFloatingPosition(prev => ({ 
-                    x: prev.x + (Math.random() - 0.5) * 4, 
-                    y: prev.y + (Math.random() - 0.5) * 4 
-                  }))
-                }}
               >
                 <div className="absolute inset-0 flex items-center justify-center z-10">
                   <PlayIcon className="w-5 h-5 text-white group-hover:scale-125 transition-all duration-300 drop-shadow-lg animate-pulse" />
