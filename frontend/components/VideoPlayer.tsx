@@ -60,7 +60,13 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
       if (isPlaying) {
         videoRef.current.pause()
       } else {
-        // Add mobile-specific play handling
+        // Enhanced mobile play handling with user gesture detection
+        if (isMobile) {
+          // Ensure video is ready for mobile playback
+          videoRef.current.load()
+          await new Promise(resolve => setTimeout(resolve, 100))
+        }
+        
         const playPromise = videoRef.current.play()
         if (playPromise !== undefined) {
           await playPromise
@@ -70,7 +76,12 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
       if (isMobile) setShowControls(true)
     } catch (error) {
       console.error('Video play error:', error)
-      setError('Failed to play video. Please try again.')
+      // More specific error handling for mobile
+      if (isMobile && error.name === 'NotAllowedError') {
+        setError('Tap the play button to start video playback.')
+      } else {
+        setError('Failed to play video. Please try again.')
+      }
     }
   }
 
@@ -179,7 +190,7 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
           ref={videoRef}
           src={src}
           poster={poster}
-          className="w-full h-full object-contain"
+          className={`w-full h-full object-contain ${isMobile ? 'mobile-video-player' : ''}`}
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
           onPlay={() => setIsPlaying(true)}
@@ -187,10 +198,18 @@ export default function VideoPlayer({ src, poster, title, onClose }: VideoPlayer
           onError={handleVideoError}
           onClick={handleVideoClick}
           preload="metadata"
-          playsInline // Important for mobile Safari
-          webkit-playsinline="true" // Legacy iOS support
-          x5-video-player-type="h5" // For Android WeChat
-          x5-video-player-fullscreen="true"
+          playsInline={true}
+          controls={false}
+          autoPlay={false}
+          muted={isMuted}
+          style={{
+            objectFit: 'contain'
+          } as React.CSSProperties}
+          {...(isMobile && {
+            'webkit-playsinline': 'true',
+            'x5-video-player-type': 'h5',
+            'x5-video-player-fullscreen': 'true'
+          })}
         />
 
         {/* Custom Controls Overlay */}

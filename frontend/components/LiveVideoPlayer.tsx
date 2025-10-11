@@ -100,6 +100,12 @@ export default function LiveVideoPlayer({
       if (isPlaying) {
         videoRef.current.pause()
       } else {
+        // Enhanced mobile play handling for live streams
+        if (isMobile) {
+          videoRef.current.load()
+          await new Promise(resolve => setTimeout(resolve, 100))
+        }
+        
         const playPromise = videoRef.current.play()
         if (playPromise !== undefined) {
           await playPromise
@@ -109,7 +115,11 @@ export default function LiveVideoPlayer({
       if (isMobile) setShowControls(true)
     } catch (error) {
       console.error('Video play error:', error)
-      setError('Failed to play live stream. Please check your connection and try again.')
+      if (isMobile && error.name === 'NotAllowedError') {
+        setError('Tap the play button to start live stream.')
+      } else {
+        setError('Failed to play live stream. Please check your connection and try again.')
+      }
     }
   }
 
@@ -267,19 +277,25 @@ export default function LiveVideoPlayer({
           ref={videoRef}
           src={src}
           poster={poster}
-          className="w-full h-full object-contain"
+          className={`w-full h-full object-contain ${isMobile ? 'mobile-video-player' : ''}`}
           onLoadedMetadata={handleLoadedMetadata}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
           onError={handleVideoError}
           onClick={handleVideoClick}
           preload="metadata"
-          playsInline
-          webkit-playsinline="true"
-          x5-video-player-type="h5"
-          x5-video-player-fullscreen="true"
-          autoPlay={isLive}
-          muted={isLive} // Live streams often need to start muted for autoplay
+          playsInline={true}
+          controls={false}
+          autoPlay={false}
+          muted={isMuted}
+          style={{
+            objectFit: 'contain'
+          } as React.CSSProperties}
+          {...(isMobile && {
+            'webkit-playsinline': 'true',
+            'x5-video-player-type': 'h5',
+            'x5-video-player-fullscreen': 'true'
+          })}
         />
 
         {/* Live Stream Indicator */}
